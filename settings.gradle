@@ -1,6 +1,1 @@
-rootProject.name = 'auth-checker'
-include ':auth-checker-core'
-include ':auth-checker-spring'
-
-project(':auth-checker-core').projectDir = "$rootDir/core" as File
-project(':auth-checker-spring').projectDir = "$rootDir/spring" as File
+rootProject.name = 'auth-checker-lib'

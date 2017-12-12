@@ -2,40 +2,49 @@ plugins {
     id 'java'
     id 'maven'
     id 'maven-publish'
-    id 'checkstyle'
     id 'java-library'
     id "com.jfrog.bintray" version "1.7.3"
 }
 
-allprojects  {
-    apply plugin: 'maven'
-    apply plugin: 'java'
+group = 'uk.gov.hmcts.reform.auth'
+version = '2.1.0'
 
-    group = 'uk.gov.hmcts.reform.auth.checker'
-    version = '2.0.2'
-
-    sourceCompatibility = 1.8
-    targetCompatibility = 1.8
-    tasks.withType(JavaCompile) {
-        options.encoding = 'UTF-8'
-    }
-
-
-    repositories {
-        maven { url "http://dl.bintray.com/hmcts/hmcts-maven/" }
-        mavenLocal()
-        jcenter()
-    }
-
-
-    dependencies {
-        compile group: 'uk.gov.hmcts.reform', name: 'java-logging-spring', version:'1.2.1'
-        testCompile group: 'junit', name: 'junit', version:'4.12'
-        testCompile group: 'org.mockito', name: 'mockito-all', version:'1.9.5'
-        compileOnly group: 'org.projectlombok', name: 'lombok', version:'1.16.10'
-        compileOnly group: 'net.sourceforge.findbugs', name: 'annotations', version:'1.3.2'
-    }
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
 }
+
+
+repositories {
+    maven { url "http://dl.bintray.com/hmcts/hmcts-maven/" }
+    mavenLocal()
+    jcenter()
+}
+
+
+dependencies {
+
+    compile group: 'uk.gov.hmcts.reform', name: 'java-logging-spring', version:'1.2.1'
+    compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version:'2.8.9'
+    compile group: 'org.apache.httpcomponents', name: 'httpclient', version:'4.5.3'
+    compile group: 'io.jsonwebtoken', name: 'jjwt', version:'0.7.0'
+    compile group: 'com.google.guava', name: 'guava', version:'21.0'
+    compile group: 'org.springframework.boot', name: 'spring-boot-autoconfigure', version:'1.5.6.RELEASE'
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-security', version:'1.5.6.RELEASE'
+    testCompile group: 'com.github.tomakehurst', name: 'wiremock', version:'2.5.1'
+    testCompile group: 'org.assertj', name: 'assertj-core', version:'3.5.2'
+    testCompile group: 'junit', name: 'junit', version:'4.12'
+    testCompile group: 'org.mockito', name: 'mockito-all', version:'1.9.5'
+    testCompile group: 'org.springframework.boot', name: 'spring-boot-starter-web', version:'1.5.6.RELEASE'
+    testCompile(group: 'org.springframework.boot', name: 'spring-boot-starter-test', version:'1.5.6.RELEASE') {
+        exclude(module: 'commons-logging')
+    }
+    compileOnly group: 'javax.servlet', name: 'javax.servlet-api', version:'3.1.0'
+    compileOnly group: 'org.projectlombok', name: 'lombok', version:'1.16.10'
+    compileOnly group: 'net.sourceforge.findbugs', name: 'annotations', version:'1.3.2'
+}
+
 
 jar {
     manifest {

@@ -1,5 +1,0 @@
-org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-uk.gov.hmcts.auth.checker.spring.AuthCheckerConfiguration,\
-uk.gov.hmcts.auth.checker.spring.AuthCheckerProperties,\
-uk.gov.hmcts.auth.idam.service.token.spring.ServiceTokenParserConfiguration,\
-uk.gov.hmcts.auth.idam.user.token.spring.UserTokenParserConfiguration
