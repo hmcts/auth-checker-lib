@@ -1,0 +1,10 @@
+dependencies {
+    compile project(':auth-checker-core')
+    compile group: 'org.springframework.boot', name: 'spring-boot-autoconfigure', version:'1.5.6.RELEASE'
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-security', version:'1.5.6.RELEASE'
+    testCompile group: 'org.springframework.boot', name: 'spring-boot-starter-web', version:'1.5.6.RELEASE'
+    testCompile(group: 'org.springframework.boot', name: 'spring-boot-starter-test', version:'1.5.6.RELEASE') {
+        exclude(module: 'commons-logging')
+    }
+    compileOnly group: 'javax.servlet', name: 'javax.servlet-api', version:'3.1.0'
+}
