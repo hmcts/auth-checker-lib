@@ -11,8 +11,8 @@ allprojects  {
     apply plugin: 'maven'
     apply plugin: 'java'
 
-    group = 'uk.gov.hmcts.auth.checker'
-    version = '2.0.0'
+    group = 'uk.gov.hmcts.reform.auth.checker'
+    version = '2.0.2'
 
     sourceCompatibility = 1.8
     targetCompatibility = 1.8

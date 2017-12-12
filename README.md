@@ -1,4 +1,8 @@
 # auth-checker-lib
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Build Status](https://travis-ci.org/hmcts/auth-checker-lib.svg?branch=master)](https://travis-ci.org/hmcts/auth-checker-lib)
+[![codecov](https://codecov.io/gh/hmcts/auth-checker-lib/branch/master/graph/badge.svg)](https://codecov.io/gh/hmcts/auth-checker-lib) 
+[![Download](https://api.bintray.com/packages/hmcts/hmcts-maven/auth-checker-lib/images/download.svg) ](https://bintray.com/hmcts/hmcts-maven/auth-checker-lib/_latestVersion)
 
 A library for verifying user/service "Bearer" tokens and enforcing coarse grained authentication/authorization.   
 
