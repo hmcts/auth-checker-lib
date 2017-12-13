@@ -3,15 +3,6 @@
 We're happy to accept 3rd-party contributions. Please make sure you read this document before you do any work though,
 as we have some expectations related to the content and quality of change sets.
 
-## What you should know about this prototype
-
-This project is a prototype of the new money claims web system, which aims to make resolving money claims between parties 
-simpler, quicker and less stressful. We use it to quickly stitch ideas of possible user journeys together and then test
-them with UK citizens in research labs.
-
-Page flows and content are created and changed depending on our findings and ideas, which are unfortunately not available unless you
-are working for the [HMCTS Reform](https://www.gov.uk/government/organisations/hm-courts-and-tribunals-service) programme.
-
 ## Before contributing
 
 Because of the above, any ideas on the user journeys and general service experience you may have **should be first consulted
