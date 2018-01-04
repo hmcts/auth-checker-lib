@@ -25,7 +25,7 @@ public class AuthCheckerServiceOnlyFilter extends AbstractPreAuthenticatedProces
         try {
             return serviceRequestAuthorizer.authorise(request);
         } catch (AuthCheckerException e) {
-            log.warn("Unsuccessful service authentication");
+            log.warn("Unsuccessful service authentication", e);
             return null;
         }
     }

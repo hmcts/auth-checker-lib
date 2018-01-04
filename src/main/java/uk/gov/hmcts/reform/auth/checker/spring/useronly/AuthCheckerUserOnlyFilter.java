@@ -32,7 +32,7 @@ public class AuthCheckerUserOnlyFilter extends AbstractPreAuthenticatedProcessin
         try {
             return userRequestAuthorizer.authorise(request);
         } catch (AuthCheckerException e) {
-            log.warn("Unsuccessful user authentication");
+            log.warn("Unsuccessful user authentication", e);
             return null;
         }
     }

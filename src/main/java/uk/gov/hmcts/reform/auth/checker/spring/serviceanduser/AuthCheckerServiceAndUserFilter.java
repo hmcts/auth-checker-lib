@@ -46,7 +46,7 @@ public class AuthCheckerServiceAndUserFilter extends AbstractPreAuthenticatedPro
         try {
             return userRequestAuthorizer.authorise(request);
         } catch (AuthCheckerException e) {
-            log.warn("Unsuccessful user authentication");
+            log.warn("Unsuccessful user authentication", e);
             return null;
         }
     }
@@ -55,7 +55,7 @@ public class AuthCheckerServiceAndUserFilter extends AbstractPreAuthenticatedPro
         try {
             return serviceRequestAuthorizer.authorise(request);
         } catch (AuthCheckerException e) {
-            log.warn("Unsuccessful service authentication");
+            log.warn("Unsuccessful service authentication", e);
             return null;
         }
     }
