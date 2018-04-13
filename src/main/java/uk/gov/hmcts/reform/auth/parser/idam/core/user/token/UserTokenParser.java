@@ -1,5 +1,6 @@
 package uk.gov.hmcts.reform.auth.parser.idam.core.user.token;
 
-public interface UserTokenParser {
-    UserTokenDetails parse(String jwt) throws UserTokenParsingException;
+public interface UserTokenParser<T> {
+    T parse(String jwt);
 }
+

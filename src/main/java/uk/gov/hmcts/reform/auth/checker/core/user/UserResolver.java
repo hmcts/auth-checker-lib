@@ -6,7 +6,7 @@ import uk.gov.hmcts.reform.auth.parser.idam.core.user.token.UserTokenDetails;
 import uk.gov.hmcts.reform.auth.parser.idam.core.user.token.UserTokenParser;
 
 public class UserResolver implements SubjectResolver<User> {
-    private final UserTokenParser userTokenParser;
+    private final UserTokenParser<UserTokenDetails> userTokenParser;
 
     public UserResolver(UserTokenParser userTokenParser) {
         this.userTokenParser = userTokenParser;

@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
 import uk.gov.hmcts.reform.auth.parser.idam.core.user.token.HttpComponentsBasedUserTokenParser;
+import uk.gov.hmcts.reform.auth.parser.idam.core.user.token.UserTokenDetails;
 import uk.gov.hmcts.reform.auth.parser.idam.core.user.token.UserTokenParser;
 
 @Lazy
@@ -21,9 +22,9 @@ public class UserTokenParserConfiguration {
     }
 
     @Bean
-    public UserTokenParser userTokenParser(HttpClient userTokenParserHttpClient,
-                                           @Value("${auth.idam.client.baseUrl}") String baseUrl) {
-        return new HttpComponentsBasedUserTokenParser(userTokenParserHttpClient, baseUrl);
+    public UserTokenParser<UserTokenDetails> userTokenParser(HttpClient userTokenParserHttpClient,
+                                                             @Value("${auth.idam.client.baseUrl}") String baseUrl) {
+        return new HttpComponentsBasedUserTokenParser<>(userTokenParserHttpClient, baseUrl, UserTokenDetails.class);
     }
 
 }

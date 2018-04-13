@@ -22,6 +22,7 @@ import uk.gov.hmcts.reform.auth.checker.core.service.ServiceResolver;
 import uk.gov.hmcts.reform.auth.checker.core.user.User;
 import uk.gov.hmcts.reform.auth.checker.core.user.UserRequestAuthorizer;
 import uk.gov.hmcts.reform.auth.checker.core.user.UserResolver;
+import uk.gov.hmcts.reform.auth.parser.idam.core.user.token.UserTokenDetails;
 import uk.gov.hmcts.reform.auth.parser.idam.core.user.token.UserTokenParser;
 import uk.gov.hmcts.reform.auth.parser.idam.core.service.token.ServiceTokenParser;
 
@@ -38,16 +39,18 @@ public class AuthCheckerConfiguration {
 
     @Bean
     @ConditionalOnMissingBean(name = "userResolver")
-    public SubjectResolver<User> userResolver(UserTokenParser userTokenParser, AuthCheckerProperties properties) {
+    public SubjectResolver<User> userResolver(UserTokenParser<UserTokenDetails> userTokenParser, AuthCheckerProperties properties) {
         return new CachingSubjectResolver<>(new UserResolver(userTokenParser), properties.getUser().getTtlInSeconds(), properties.getUser().getMaximumSize());
     }
 
     @Bean
+    @ConditionalOnMissingBean(name = "serviceRequestAuthorizer")
     public ServiceRequestAuthorizer serviceRequestAuthorizer(SubjectResolver<Service> serviceResolver, Function<HttpServletRequest, Collection<String>> authorizedServicesExtractor) {
         return new ServiceRequestAuthorizer(serviceResolver, authorizedServicesExtractor);
     }
 
     @Bean
+    @ConditionalOnMissingBean(name = "userRequestAuthorizer")
     public UserRequestAuthorizer userRequestAuthorizer(SubjectResolver<User> userResolver,
                                                        Function<HttpServletRequest, Optional<String>> userIdExtractor,
                                                        Function<HttpServletRequest, Collection<String>> authorizedRolesExtractor) {
@@ -55,6 +58,7 @@ public class AuthCheckerConfiguration {
     }
 
     @Bean
+    @ConditionalOnMissingBean(name = "preAuthenticatedAuthenticationProvider")
     public PreAuthenticatedAuthenticationProvider preAuthenticatedAuthenticationProvider() {
         PreAuthenticatedAuthenticationProvider authenticationProvider = new PreAuthenticatedAuthenticationProvider();
         authenticationProvider.setPreAuthenticatedUserDetailsService(new AuthCheckerUserDetailsService());

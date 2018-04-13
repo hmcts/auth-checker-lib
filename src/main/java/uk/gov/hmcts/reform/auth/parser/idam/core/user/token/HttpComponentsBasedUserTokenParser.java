@@ -9,21 +9,23 @@ import org.apache.http.client.methods.HttpGet;
 
 import java.io.IOException;
 
-public class HttpComponentsBasedUserTokenParser implements UserTokenParser {
+public class HttpComponentsBasedUserTokenParser<T> implements UserTokenParser<T> {
 
     private final HttpClient httpClient;
     private final String baseUrl;
 //bad
     private final ObjectMapper objectMapper = new ObjectMapper();
+    private final Class<T> type;
 
-    public HttpComponentsBasedUserTokenParser(HttpClient httpClient, String baseUrl) {
+    public HttpComponentsBasedUserTokenParser(HttpClient httpClient, String baseUrl, Class<T> type) {
         this.httpClient = httpClient;
         this.baseUrl = baseUrl;
+        this.type = type;
     }
 
     @Override
     @SuppressWarnings(value = "HTTP_PARAMETER_POLLUTION", justification = "baseUrl + /details is not based on user input")
-    public UserTokenDetails parse(String jwt) {
+    public T parse(String jwt) {
         try {
             String bearerJwt = jwt.startsWith("Bearer ") ? jwt : "Bearer " + jwt;
             HttpGet request = new HttpGet(baseUrl + "/details");
@@ -31,7 +33,7 @@ public class HttpComponentsBasedUserTokenParser implements UserTokenParser {
 
             return httpClient.execute(request, httpResponse -> {
                 checkStatusIs2xx(httpResponse);
-                return objectMapper.readValue(httpResponse.getEntity().getContent(), UserTokenDetails.class);
+                return objectMapper.readValue(httpResponse.getEntity().getContent(), type);
             });
         } catch (IOException e) {
             throw new UserTokenParsingException(e);
