@@ -10,11 +10,11 @@ import uk.gov.hmcts.reform.auth.checker.core.exceptions.AuthCheckerException;
 
 
 @Slf4j
-public class AuthCheckerUserOnlyFilter extends AbstractPreAuthenticatedProcessingFilter {
+public class AuthCheckerUserOnlyFilter<T extends User> extends AbstractPreAuthenticatedProcessingFilter {
 
-    private final RequestAuthorizer<User> userRequestAuthorizer;
+    private final RequestAuthorizer<T> userRequestAuthorizer;
 
-    public AuthCheckerUserOnlyFilter(RequestAuthorizer<User> userRequestAuthorizer) {
+    public AuthCheckerUserOnlyFilter(RequestAuthorizer<T> userRequestAuthorizer) {
         this.userRequestAuthorizer = userRequestAuthorizer;
     }
 
@@ -28,13 +28,12 @@ public class AuthCheckerUserOnlyFilter extends AbstractPreAuthenticatedProcessin
         return request.getHeader(UserRequestAuthorizer.AUTHORISATION);
     }
 
-    private User authorizeUser(HttpServletRequest request) {
+    private T authorizeUser(HttpServletRequest request) {
         try {
             return userRequestAuthorizer.authorise(request);
         } catch (AuthCheckerException e) {
-            log.warn("Unsuccessful user authentication", e);
+            log.warn("Unsuccessful user authentication");
             return null;
         }
     }
-
 }

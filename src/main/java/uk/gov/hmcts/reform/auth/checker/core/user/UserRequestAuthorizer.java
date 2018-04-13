@@ -15,14 +15,14 @@ import uk.gov.hmcts.reform.auth.checker.core.exceptions.UnauthorisedUserExceptio
 import uk.gov.hmcts.reform.auth.parser.idam.core.user.token.UserTokenInvalidException;
 import uk.gov.hmcts.reform.auth.parser.idam.core.user.token.UserTokenParsingException;
 
-public class UserRequestAuthorizer implements RequestAuthorizer<User> {
+public class UserRequestAuthorizer<T extends User> implements RequestAuthorizer<T> {
     public static final String AUTHORISATION = "Authorization";
 
-    private final SubjectResolver<User> userResolver;
+    private final SubjectResolver<T> userResolver;
     private final Function<HttpServletRequest, Optional<String>> userIdExtractor;
     private final Function<HttpServletRequest, Collection<String>> authorizedRolesExtractor;
 
-    public UserRequestAuthorizer(SubjectResolver<User> userResolver,
+    public UserRequestAuthorizer(SubjectResolver<T> userResolver,
                                  Function<HttpServletRequest, Optional<String>> userIdExtractor,
                                  Function<HttpServletRequest, Collection<String>> authorizedRolesExtractor) {
         this.userResolver = userResolver;
@@ -31,13 +31,13 @@ public class UserRequestAuthorizer implements RequestAuthorizer<User> {
     }
 
     @Override
-    public User authorise(HttpServletRequest request) throws UnauthorisedRoleException, UnauthorisedUserException {
+    public T authorise(HttpServletRequest request) throws UnauthorisedRoleException, UnauthorisedUserException {
         String bearerToken = request.getHeader(AUTHORISATION);
         if (bearerToken == null) {
             throw new BearerTokenMissingException();
         }
 
-        User user = getTokenDetails(bearerToken);
+        T user = getTokenDetails(bearerToken);
 
         Collection<String> authorizedRoles = authorizedRolesExtractor.apply(request);
         if (!authorizedRoles.isEmpty() && Collections.disjoint(authorizedRoles, user.getRoles())) {
@@ -49,7 +49,7 @@ public class UserRequestAuthorizer implements RequestAuthorizer<User> {
         return user;
     }
 
-    private User getTokenDetails(String bearerToken) {
+    private T getTokenDetails(String bearerToken) {
         try {
             return userResolver.getTokenDetails(bearerToken);
         } catch (UserTokenInvalidException e) {
