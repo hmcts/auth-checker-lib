@@ -50,9 +50,9 @@ public class ServiceRequestAuthorizer implements RequestAuthorizer<Service> {
         try {
             return serviceResolver.getTokenDetails(bearerToken);
         } catch (ServiceTokenInvalidException e) {
-            throw new BearerTokenInvalidException();
+            throw new BearerTokenInvalidException(e);
         } catch (ServiceTokenParsingException e) {
-            throw new AuthCheckerException("Error parsing JWT token");
+            throw new AuthCheckerException("Error parsing JWT token", e);
         }
     }
 
