@@ -53,9 +53,9 @@ public class UserRequestAuthorizer<T extends User> implements RequestAuthorizer<
         try {
             return userResolver.getTokenDetails(bearerToken);
         } catch (UserTokenInvalidException e) {
-            throw new BearerTokenInvalidException();
+            throw new BearerTokenInvalidException(e);
         } catch (UserTokenParsingException e) {
-            throw new AuthCheckerException("Error parsing JWT token");
+            throw new AuthCheckerException("Error parsing JWT token", e);
         }
     }
 
