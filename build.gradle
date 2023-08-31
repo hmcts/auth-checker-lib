@@ -23,7 +23,7 @@ repositories {
 dependencies {
 
     api group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version:'2.9.9.1'
-    api group: 'org.apache.httpcomponents', name: 'httpclient', version:'4.5.9'
+    api group: 'org.apache.httpcomponents', name: 'httpclient', version:'4.5.14'
     api group: 'io.jsonwebtoken', name: 'jjwt', version:'0.9.1'
     api group: 'com.google.guava', name: 'guava', version:'28.0-jre'
     api group: 'org.springframework.boot', name: 'spring-boot-autoconfigure', version:'2.1.6.RELEASE'
