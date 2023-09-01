@@ -28,7 +28,7 @@ dependencies {
     api group: 'com.google.guava', name: 'guava', version:'28.0-jre'
     api group: 'org.springframework.boot', name: 'spring-boot-autoconfigure', version:'2.1.6.RELEASE'
     api group: 'org.springframework.boot', name: 'spring-boot-starter-security', version:'2.1.6.RELEASE'
-    testImplementation group: 'com.github.tomakehurst', name: 'wiremock', version:'2.23.2'
+    testImplementation group: 'com.github.tomakehurst', name: 'wiremock', version:'2.27.2'
     testImplementation group: 'org.assertj', name: 'assertj-core', version:'3.12.2'
     testImplementation group: 'junit', name: 'junit', version:'4.12'
     testImplementation group: 'org.mockito', name: 'mockito-all', version:'1.10.19'
