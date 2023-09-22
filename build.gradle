@@ -26,14 +26,14 @@ dependencies {
     api group: 'org.apache.httpcomponents', name: 'httpclient', version:'4.5.14'
     api group: 'io.jsonwebtoken', name: 'jjwt', version:'0.9.1'
     api group: 'com.google.guava', name: 'guava', version:'32.1.2-jre'
-    api group: 'org.springframework.boot', name: 'spring-boot-autoconfigure', version:'2.7.15'
-    api group: 'org.springframework.boot', name: 'spring-boot-starter-security', version:'2.7.15'
+    api group: 'org.springframework.boot', name: 'spring-boot-autoconfigure', version:'2.7.16'
+    api group: 'org.springframework.boot', name: 'spring-boot-starter-security', version:'2.7.16'
     testImplementation group: 'com.github.tomakehurst', name: 'wiremock', version:'3.0.1'
     testImplementation group: 'org.assertj', name: 'assertj-core', version:'3.24.2'
     testImplementation group: 'junit', name: 'junit', version:'4.13.2'
     testImplementation group: 'org.mockito', name: 'mockito-all', version:'1.10.19'
-    testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-web', version:'2.7.15'
-    testImplementation(group: 'org.springframework.boot', name: 'spring-boot-starter-test', version:'2.7.15') {
+    testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-web', version:'2.7.16'
+    testImplementation(group: 'org.springframework.boot', name: 'spring-boot-starter-test', version:'2.7.16') {
         exclude(module: 'commons-logging')
     }
     compileOnly group: 'javax.servlet', name: 'javax.servlet-api', version:'4.0.1'
