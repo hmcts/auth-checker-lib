@@ -22,7 +22,7 @@ repositories {
 
 dependencies {
 
-    api group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version:'2.15.2'
+    api group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version:'2.15.3'
     api group: 'org.apache.httpcomponents', name: 'httpclient', version:'4.5.14'
     api group: 'io.jsonwebtoken', name: 'jjwt', version:'0.12.2'
     api group: 'com.google.guava', name: 'guava', version:'32.1.3-jre'
