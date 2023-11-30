@@ -2,6 +2,7 @@ package uk.gov.hmcts.reform.auth.parser.idam.spring.service.token;
 
 import org.apache.http.client.HttpClient;
 import org.apache.http.impl.client.HttpClients;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
