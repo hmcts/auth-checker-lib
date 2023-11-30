@@ -2,6 +2,7 @@ package uk.gov.hmcts.reform.auth.parser.idam.spring.user.token;
 
 import org.apache.http.client.HttpClient;
 import org.apache.http.impl.client.HttpClients;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
@@ -22,9 +23,10 @@ public class UserTokenParserConfiguration {
     }
 
     @Bean
-    public UserTokenParser<UserTokenDetails> userTokenParser(HttpClient userTokenParserHttpClient,
-                                                             @Value("${auth.idam.client.baseUrl}") String baseUrl) {
-        return new HttpComponentsBasedUserTokenParser<>(userTokenParserHttpClient, baseUrl, UserTokenDetails.class);
+    public UserTokenParser<UserTokenDetails> userTokenParser(
+        @Qualifier("userTokenParserHttpClient") HttpClient userTokenParserHttpClient,
+        @Value("${auth.idam.client.baseUrl}") String baseUrl) {
+            return new HttpComponentsBasedUserTokenParser<>(userTokenParserHttpClient, baseUrl, UserTokenDetails.class);
     }
 
 }
