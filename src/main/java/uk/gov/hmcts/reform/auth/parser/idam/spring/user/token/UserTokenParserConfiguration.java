@@ -22,9 +22,10 @@ public class UserTokenParserConfiguration {
     }
 
     @Bean
-    public UserTokenParser<UserTokenDetails> userTokenParser(HttpClient userTokenParserHttpClient,
-                                                             @Value("${auth.idam.client.baseUrl}") String baseUrl) {
-        return new HttpComponentsBasedUserTokenParser<>(userTokenParserHttpClient, baseUrl, UserTokenDetails.class);
+    public UserTokenParser<UserTokenDetails> userTokenParser(
+        @Qualifier("userTokenParserHttpClient") HttpClient userTokenParserHttpClient,
+        @Value("${auth.idam.client.baseUrl}") String baseUrl) {
+            return new HttpComponentsBasedUserTokenParser<>(userTokenParserHttpClient, baseUrl, UserTokenDetails.class);
     }
 
 }
