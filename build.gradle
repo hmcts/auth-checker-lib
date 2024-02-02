@@ -7,8 +7,8 @@ plugins {
 group = 'uk.gov.hmcts.reform.auth'
 version = '2.1.5'
 
-sourceCompatibility = 11
-targetCompatibility = 11
+sourceCompatibility = 17
+targetCompatibility = 17
 tasks.withType(JavaCompile) {
     options.encoding = 'UTF-8'
 }
@@ -21,22 +21,21 @@ repositories {
 
 
 dependencies {
-
-    api group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version:'2.16.1'
-    api group: 'org.apache.httpcomponents', name: 'httpclient', version:'4.5.14'
-    api group: 'io.jsonwebtoken', name: 'jjwt', version:'0.12.5'
-    api group: 'com.google.guava', name: 'guava', version:'33.0.0-jre'
-    api group: 'org.springframework.boot', name: 'spring-boot-autoconfigure', version:'2.7.18'
-    api group: 'org.springframework.boot', name: 'spring-boot-starter-security', version:'2.7.18'
-    testImplementation group: 'com.github.tomakehurst', name: 'wiremock', version:'3.0.1'
-    testImplementation group: 'org.assertj', name: 'assertj-core', version:'3.25.2'
-    testImplementation group: 'junit', name: 'junit', version:'4.13.2'
-    testImplementation group: 'org.mockito', name: 'mockito-all', version:'1.10.19'
-    testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-web', version:'2.7.18'
-    testImplementation(group: 'org.springframework.boot', name: 'spring-boot-starter-test', version:'2.7.18') {
+    api group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.16.1'
+    api group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.14'
+    api group: 'io.jsonwebtoken', name: 'jjwt', version: '0.12.5'
+    api group: 'com.google.guava', name: 'guava', version: '33.0.0-jre'
+    api group: 'org.springframework.boot', name: 'spring-boot-autoconfigure', version: '2.7.18'
+    api group: 'org.springframework.boot', name: 'spring-boot-starter-security', version: '2.7.18'
+    testImplementation group: 'com.github.tomakehurst', name: 'wiremock', version: '3.0.1'
+    testImplementation group: 'org.assertj', name: 'assertj-core', version: '3.25.2'
+    testImplementation group: 'junit', name: 'junit', version: '4.13.2'
+    testImplementation group: 'org.mockito', name: 'mockito-core', version: '5.10.0'
+    testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: '2.7.18'
+    testImplementation(group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: '2.7.18') {
         exclude(module: 'commons-logging')
     }
-    compileOnly group: 'javax.servlet', name: 'javax.servlet-api', version:'4.0.1'
+    compileOnly group: 'javax.servlet', name: 'javax.servlet-api', version: '4.0.1'
     compileOnly group: 'com.google.code.findbugs', name: 'annotations', version: '3.0.1'
 
 }
@@ -69,12 +68,12 @@ def pomConfig = {
 }
 
 task sourcesJar(type: Jar, dependsOn: classes) {
-    classifier = 'sources'
+    archiveClassifier = 'sources'
     from sourceSets.main.allSource
 }
 
 task javadocJar(type: Jar, dependsOn: javadoc) {
-    classifier = 'javadoc'
+    archiveClassifier = 'javadoc'
     from javadoc.destinationDir
 }
 
