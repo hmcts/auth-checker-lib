@@ -14,6 +14,7 @@ import uk.gov.hmcts.reform.auth.checker.core.exceptions.UnauthorisedUserExceptio
 import static java.util.Arrays.asList;
 
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.Matchers.instanceOf;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -21,11 +22,11 @@ import static org.mockito.internal.util.collections.Sets.newSet;
 
 public class UserRequestAuthorizerTest {
 
-    private String userId = "1111-2222";
-    private Function<HttpServletRequest, Optional<String>> extractUserIdFromRequest = (String) -> Optional.of(userId);
+    private final String userId = "1111-2222";
+    private final Function<HttpServletRequest, Optional<String>> extractUserIdFromRequest = (String) -> Optional.of(userId);
 
     @Test
-    public void testWhenAuthorisedRoleAndValidUserId() throws Throwable {
+    public void testWhenAuthorisedRoleAndValidUserId() {
 
         HttpServletRequest mockRequest = mock(HttpServletRequest.class);
         String userBearerToken = "Bearer aa.bbbb.cccc";
@@ -40,7 +41,7 @@ public class UserRequestAuthorizerTest {
 
         Subject actualSubject = userRequestAuthorizer.authorise(mockRequest);
 
-        assertThat((User) actualSubject, is(User.class));
+        assertThat(actualSubject, instanceOf(User.class));
         assertThat("Subjects don't match!", actualSubject, is(stubbedSubject));
     }
 
@@ -62,7 +63,7 @@ public class UserRequestAuthorizerTest {
 
         Subject actualSubject = userRequestAuthorizer.authorise(mockRequest);
 
-        assertThat((User) actualSubject, is(User.class));
+        assertThat((User) actualSubject, instanceOf(User.class));
         assertThat("Subjects don't match!", actualSubject, is(stubbedSubject));
     }
 
@@ -82,7 +83,7 @@ public class UserRequestAuthorizerTest {
 
         Subject actualSubject = userRequestAuthorizer.authorise(mockRequest);
 
-        assertThat((User) actualSubject, is(User.class));
+        assertThat((User) actualSubject, instanceOf(User.class));
         assertThat("Subjects don't match!", actualSubject, is(stubbedSubject));
     }
 
