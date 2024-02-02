@@ -2,7 +2,7 @@ package uk.gov.hmcts.reform.auth.parser.idam.core.user.token;
 
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import com.google.common.collect.ImmutableSet;
-import org.apache.http.impl.client.HttpClients;
+import org.apache.hc.client5.http.impl.classic.HttpClients;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;

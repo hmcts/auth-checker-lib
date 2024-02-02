@@ -1,7 +1,7 @@
 package uk.gov.hmcts.reform.auth.parser.idam.spring.service.token;
 
-import org.apache.http.client.HttpClient;
-import org.apache.http.impl.client.HttpClients;
+import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
+import org.apache.hc.client5.http.impl.classic.HttpClients;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -17,13 +17,13 @@ public class ServiceTokenParserConfiguration {
 
     @Bean
     @ConditionalOnMissingBean(name = "serviceTokenParserHttpClient")
-    public HttpClient serviceTokenParserHttpClient() {
+    public CloseableHttpClient serviceTokenParserHttpClient() {
         return HttpClients.createDefault();
     }
 
     @Bean
     public ServiceTokenParser serviceAuthProviderAuthCheckClient(
-        @Qualifier("serviceTokenParserHttpClient") HttpClient serviceTokenParserHttpClient,
+        @Qualifier("serviceTokenParserHttpClient") CloseableHttpClient serviceTokenParserHttpClient,
         @Value("${auth.provider.service.client.baseUrl}") String baseUrl) {
             return new HttpComponentsBasedServiceTokenParser(serviceTokenParserHttpClient, baseUrl);
     }

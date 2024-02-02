@@ -2,18 +2,18 @@ package uk.gov.hmcts.reform.auth.parser.idam.core.service.token;
 
 import edu.umd.cs.findbugs.annotations.SuppressWarnings;
 import java.io.IOException;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.util.EntityUtils;
+import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
+import org.apache.hc.core5.http.HttpResponse;
+import org.apache.hc.client5.http.ClientProtocolException;
+import org.apache.hc.client5.http.classic.methods.HttpGet;
+import org.apache.hc.core5.http.io.entity.EntityUtils;
 
 public class HttpComponentsBasedServiceTokenParser implements ServiceTokenParser {
 
-    private final HttpClient httpClient;
+    private final CloseableHttpClient httpClient;
     private final String baseUrl;
 
-    public HttpComponentsBasedServiceTokenParser(HttpClient httpClient, String baseUrl) {
+    public HttpComponentsBasedServiceTokenParser(CloseableHttpClient httpClient, String baseUrl) {
         this.httpClient = httpClient;
         this.baseUrl = baseUrl;
     }
@@ -35,7 +35,7 @@ public class HttpComponentsBasedServiceTokenParser implements ServiceTokenParser
     }
 
     private void checkStatusIs2xx(HttpResponse httpResponse) throws IOException {
-        int status = httpResponse.getStatusLine().getStatusCode();
+        int status = httpResponse.getCode();
 
         if (status == 401) {
             throw new ServiceTokenInvalidException();

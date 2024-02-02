@@ -2,22 +2,22 @@ package uk.gov.hmcts.reform.auth.parser.idam.core.user.token;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.umd.cs.findbugs.annotations.SuppressWarnings;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
+import org.apache.hc.client5.http.ClientProtocolException;
+import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
+import org.apache.hc.core5.http.HttpResponse;
+import org.apache.hc.client5.http.classic.methods.HttpGet;
 
 import java.io.IOException;
 
 public class HttpComponentsBasedUserTokenParser<T> implements UserTokenParser<T> {
 
-    private final HttpClient httpClient;
+    private final CloseableHttpClient httpClient;
     private final String baseUrl;
 //bad
     private final ObjectMapper objectMapper = new ObjectMapper();
     private final Class<T> type;
 
-    public HttpComponentsBasedUserTokenParser(HttpClient httpClient, String baseUrl, Class<T> type) {
+    public HttpComponentsBasedUserTokenParser(CloseableHttpClient httpClient, String baseUrl, Class<T> type) {
         this.httpClient = httpClient;
         this.baseUrl = baseUrl;
         this.type = type;
@@ -41,7 +41,7 @@ public class HttpComponentsBasedUserTokenParser<T> implements UserTokenParser<T>
     }
 
     private void checkStatusIs2xx(HttpResponse httpResponse) throws IOException {
-        int status = httpResponse.getStatusLine().getStatusCode();
+        int status = httpResponse.getCode();
 
         if (status == 401) {
             throw new UserTokenInvalidException();
