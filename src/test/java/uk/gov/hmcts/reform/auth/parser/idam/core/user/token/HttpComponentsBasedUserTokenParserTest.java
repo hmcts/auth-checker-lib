@@ -1,50 +1,49 @@
 package uk.gov.hmcts.reform.auth.parser.idam.core.user.token;
 
-import com.github.tomakehurst.wiremock.junit.WireMockRule;
+import com.github.tomakehurst.wiremock.junit5.WireMockRuntimeInfo;
+import com.github.tomakehurst.wiremock.junit5.WireMockTest;
 import com.google.common.collect.ImmutableSet;
 import org.apache.hc.client5.http.impl.classic.HttpClients;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
-import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
-public class HttpComponentsBasedUserTokenParserTest {
+@WireMockTest
+class HttpComponentsBasedUserTokenParserTest {
 
-    private static final String VALID_RESPONSE = "{\n" +
-        "        \"defaultService\" : \"BAR\",\n" +
-        "        \"email\" : \"post.clerk@hmcts.net\",\n" +
-        "        \"forename\" : \"Chris\",\n" +
-        "        \"id\" : 365750,\n" +
-        "        \"roles\" : [\"bar-post-clerk\"],\n" +
-        "        \"surname\" : \"Spencer\"\n" +
-        "    }";
-
-    @Rule
-    public WireMockRule wireMockRule = new WireMockRule(wireMockConfig().dynamicPort());
+    private static final String VALID_RESPONSE = """
+            {
+                    "defaultService" : "BAR",
+                    "email" : "post.clerk@hmcts.net",
+                    "forename" : "Chris",
+                    "id" : 365750,
+                    "roles" : ["bar-post-clerk"],
+                    "surname" : "Spencer"
+                }""";
 
     private HttpComponentsBasedUserTokenParser<UserTokenDetails> client;
     private HttpComponentsBasedUserTokenParser<CompleteUserTokenDetails> fullClient;
 
-    @Before
-    public void setUp() throws Exception {
+    @BeforeEach
+    public void setUp(WireMockRuntimeInfo wmRuntimeInfo) {
         client = new HttpComponentsBasedUserTokenParser<>(
             HttpClients.createMinimal(),
-            "http://localhost:" + wireMockRule.port(),
+            "http://localhost:" + wmRuntimeInfo.getHttpPort(),
             UserTokenDetails.class
         );
 
         fullClient = new HttpComponentsBasedUserTokenParser<>(
             HttpClients.createMinimal(),
-            "http://localhost:" + wireMockRule.port(),
+            "http://localhost:" + wmRuntimeInfo.getHttpPort(),
             CompleteUserTokenDetails.class
         );
     }
 
     @Test
-    public void happyPath() {
+    void happyPath() {
         stubFor(
             get(urlEqualTo("/details")).withHeader("Authorization", matching("Bearer someJwt"))
                 .willReturn(aResponse()
@@ -58,7 +57,7 @@ public class HttpComponentsBasedUserTokenParserTest {
     }
 
     @Test
-    public void bearerShouldNotBePrependedIfItsAlreadyPresent() {
+    void bearerShouldNotBePrependedIfItsAlreadyPresent() {
         stubFor(
             get(urlEqualTo("/details")).withHeader("Authorization", matching("Bearer someJwt"))
                 .willReturn(aResponse()
@@ -71,8 +70,8 @@ public class HttpComponentsBasedUserTokenParserTest {
         assertThat(userTokenDetails).isEqualTo(new UserTokenDetails("365750", ImmutableSet.of("bar-post-clerk")));
     }
 
-    @Test(expected = UserTokenParsingException.class)
-    public void non2xxResponseShouldResultInException() {
+    @Test
+    void non2xxResponseShouldResultInException() {
         stubFor(
             get(urlEqualTo("/details")).withHeader("Authorization", matching("Bearer someJwt"))
                 .willReturn(aResponse()
@@ -80,11 +79,11 @@ public class HttpComponentsBasedUserTokenParserTest {
                     .withBody(VALID_RESPONSE))
         );
 
-        client.parse("someJwt");
+        assertThrows(UserTokenParsingException.class, () -> client.parse("someJwt"));
     }
 
-    @Test(expected = UserTokenInvalidException.class)
-    public void status401ShouldResultInUserTokenInvalidException() {
+    @Test
+    void status401ShouldResultInUserTokenInvalidException() {
         stubFor(
             get(urlEqualTo("/details")).withHeader("Authorization", matching("Bearer expiredJwt"))
                 .willReturn(aResponse()
@@ -92,11 +91,11 @@ public class HttpComponentsBasedUserTokenParserTest {
                     .withBody(VALID_RESPONSE))
         );
 
-        client.parse("expiredJwt");
+        assertThrows(UserTokenInvalidException.class, () -> client.parse("expiredJwt"));
     }
 
     @Test
-    public void testFullUserRetrieval() {
+    void testFullUserRetrieval() {
         stubFor(
             get(urlEqualTo("/details")).withHeader("Authorization", matching("Bearer someJwt"))
                 .willReturn(aResponse()

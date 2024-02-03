@@ -1,14 +1,14 @@
 package uk.gov.hmcts.reform.auth.checker.spring.serviceonly;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import uk.gov.hmcts.reform.auth.checker.spring.backdoors.ServiceResolverBackdoor;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -18,9 +18,9 @@ import static org.springframework.http.HttpStatus.FORBIDDEN;
 import static org.springframework.http.HttpStatus.OK;
 import static uk.gov.hmcts.reform.auth.checker.core.service.ServiceRequestAuthorizer.AUTHORISATION;
 
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = RANDOM_PORT)
-public class ServiceOnlyComponentTest {
+class ServiceOnlyComponentTest {
     @Autowired
     private TestRestTemplate restTemplate;
 
@@ -28,26 +28,26 @@ public class ServiceOnlyComponentTest {
     private ServiceResolverBackdoor serviceResolverBackdoor;
 
     @Test
-    public void noAuthorizationHeaderShouldResultIn403() {
+    void noAuthorizationHeaderShouldResultIn403() {
         ResponseEntity<String> response = restTemplate.getForEntity("/test", String.class);
         assertThat(response.getStatusCode()).isEqualTo(FORBIDDEN);
     }
 
     @Test
-    public void unknownTokenShouldResultIn401() {
+    void unknownTokenShouldResultIn401() {
         ResponseEntity<String> response = restTemplate.exchange("/test", GET, withServiceHeader("unknownToken"), String.class);
         assertThat(response.getStatusCode()).isEqualTo(FORBIDDEN);
     }
 
     @Test
-    public void unmatchedServiceShouldResultIn401() {
+    void unmatchedServiceShouldResultIn401() {
         serviceResolverBackdoor.registerToken("token", "unmatched");
         ResponseEntity<String> response = restTemplate.exchange("/test", GET, withServiceHeader("token"), String.class);
         assertThat(response.getStatusCode()).isEqualTo(FORBIDDEN);
     }
 
     @Test
-    public void happyPathResultsIn200() {
+    void happyPathResultsIn200() {
         serviceResolverBackdoor.registerToken("token", "divorce");
         ResponseEntity<String> response = restTemplate.exchange("/test", GET, withServiceHeader("token"), String.class);
         assertThat(response.getStatusCode()).isEqualTo(OK);

@@ -1,7 +1,7 @@
 package uk.gov.hmcts.reform.auth.checker.spring.serviceanduser;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.internal.util.collections.Sets;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -9,7 +9,7 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import uk.gov.hmcts.reform.auth.checker.core.service.ServiceRequestAuthorizer;
 import uk.gov.hmcts.reform.auth.checker.core.user.User;
 import uk.gov.hmcts.reform.auth.checker.core.user.UserRequestAuthorizer;
@@ -22,9 +22,9 @@ import static org.springframework.http.HttpMethod.GET;
 import static org.springframework.http.HttpStatus.FORBIDDEN;
 import static org.springframework.http.HttpStatus.OK;
 
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = RANDOM_PORT)
-public class ServiceAndUserComponentTest {
+class ServiceAndUserComponentTest {
     @Autowired
     private TestRestTemplate restTemplate;
 
@@ -35,13 +35,13 @@ public class ServiceAndUserComponentTest {
     private ServiceResolverBackdoor serviceResolverBackdoor;
 
     @Test
-    public void noAuthorizationHeadersShouldResultIn403() {
+    void noAuthorizationHeadersShouldResultIn403() {
         ResponseEntity<String> response = restTemplate.getForEntity("/test", String.class);
         assertThat(response.getStatusCode()).isEqualTo(FORBIDDEN);
     }
 
     @Test
-    public void noUserAuthorizationHeaderShouldResultIn403() {
+    void noUserAuthorizationHeaderShouldResultIn403() {
         userResolverBackdoor.registerToken("userToken", new User("user", Sets.newSet("citizen")));
         HttpEntity<Object> entity = withServiceAndUserHeaders("unknownServiceToken", "userToken");
         ResponseEntity<String> response = restTemplate.exchange("/test", GET, entity, String.class);
@@ -49,7 +49,7 @@ public class ServiceAndUserComponentTest {
     }
 
     @Test
-    public void noServiceAuthorizationHeaderShouldResultIn403() {
+    void noServiceAuthorizationHeaderShouldResultIn403() {
         serviceResolverBackdoor.registerToken("serviceToken", "divorce");
         HttpEntity<Object> entity = withServiceAndUserHeaders("serviceToken", "unknownUserToken");
         ResponseEntity<String> response = restTemplate.exchange("/test", GET, entity, String.class);
@@ -57,7 +57,7 @@ public class ServiceAndUserComponentTest {
     }
 
     @Test
-    public void happyPathResultsIn200() {
+    void happyPathResultsIn200() {
         userResolverBackdoor.registerToken("userToken", new User("user", Sets.newSet("citizen")));
         serviceResolverBackdoor.registerToken("serviceToken", "divorce");
         HttpEntity<Object> entity = withServiceAndUserHeaders("serviceToken", "userToken");

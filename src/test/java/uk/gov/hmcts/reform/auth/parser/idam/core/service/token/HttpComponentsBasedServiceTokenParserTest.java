@@ -1,33 +1,31 @@
 package uk.gov.hmcts.reform.auth.parser.idam.core.service.token;
 
-import com.github.tomakehurst.wiremock.junit.WireMockRule;
+import com.github.tomakehurst.wiremock.junit5.WireMockRuntimeInfo;
+import com.github.tomakehurst.wiremock.junit5.WireMockTest;
 import org.apache.hc.client5.http.impl.classic.HttpClients;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
-import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
-public class HttpComponentsBasedServiceTokenParserTest {
-
-    @Rule
-    public WireMockRule wireMockRule = new WireMockRule(wireMockConfig().dynamicPort());
+@WireMockTest
+class HttpComponentsBasedServiceTokenParserTest {
 
     private HttpComponentsBasedServiceTokenParser client;
 
-    @Before
-    public void setUp() throws Exception {
+    @BeforeEach
+    public void setUp(WireMockRuntimeInfo wmRuntimeInfo) {
         client = new HttpComponentsBasedServiceTokenParser(
             HttpClients.createMinimal(),
-            "http://localhost:" + wireMockRule.port()
+            "http://localhost:" + wmRuntimeInfo.getHttpPort()
         );
     }
 
 //    bad
     @Test
-    public void happyPath() {
+    void happyPath() {
         stubFor(
             get(urlEqualTo("/details")).withHeader("Authorization", matching("Bearer someJwt"))
                 .willReturn(aResponse()
@@ -42,7 +40,7 @@ public class HttpComponentsBasedServiceTokenParserTest {
 
 //    bad
     @Test
-    public void bearerShouldNotBePrependedIfItsAlreadyPresent() {
+    void bearerShouldNotBePrependedIfItsAlreadyPresent() {
         stubFor(
             get(urlEqualTo("/details")).withHeader("Authorization", matching("Bearer someJwt"))
                 .willReturn(aResponse()
@@ -56,8 +54,8 @@ public class HttpComponentsBasedServiceTokenParserTest {
     }
 
 //    Bad
-    @Test(expected = ServiceTokenParsingException.class)
-    public void non2xxResponseShouldResultInException() {
+    @Test
+    void non2xxResponseShouldResultInException() {
         stubFor(
             get(urlEqualTo("/details")).withHeader("Authorization", matching("Bearer someJwt"))
                 .willReturn(aResponse()
@@ -65,12 +63,12 @@ public class HttpComponentsBasedServiceTokenParserTest {
                     .withBody("subject"))
         );
 
-        client.parse("someJwt");
+        assertThrows(ServiceTokenParsingException.class, () -> client.parse("someJwt"));
     }
 
 //    Bad
-    @Test(expected = ServiceTokenInvalidException.class)
-    public void response401ShouldResultInServiceTokenInvalidException() {
+    @Test
+    void response401ShouldResultInServiceTokenInvalidException() {
         stubFor(
             get(urlEqualTo("/details")).withHeader("Authorization", matching("Bearer expiredJwt"))
                 .willReturn(aResponse()
@@ -78,6 +76,6 @@ public class HttpComponentsBasedServiceTokenParserTest {
                     .withBody("any-body"))
         );
 
-        client.parse("expiredJwt");
+        assertThrows(ServiceTokenInvalidException.class, () -> client.parse("expiredJwt"));
     }
 }

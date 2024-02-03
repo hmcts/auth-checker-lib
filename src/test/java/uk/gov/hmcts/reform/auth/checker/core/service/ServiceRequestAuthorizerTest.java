@@ -1,54 +1,60 @@
 package uk.gov.hmcts.reform.auth.checker.core.service;
 
-
-import javax.servlet.http.HttpServletRequest;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import uk.gov.hmcts.reform.auth.checker.core.SubjectResolver;
 import uk.gov.hmcts.reform.auth.checker.core.exceptions.BearerTokenMissingException;
 import uk.gov.hmcts.reform.auth.checker.core.exceptions.UnauthorisedServiceException;
 
-import static java.util.Arrays.asList;
+import javax.servlet.http.HttpServletRequest;
+import java.util.Arrays;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
-public class ServiceRequestAuthorizerTest {
+class ServiceRequestAuthorizerTest {
 
     @Test
-    public void testWhenAuthorisedService() throws Throwable {
-        Service actualService = authoriseServiceWhenAllowedPrincipals(new Service("service-a"), "service-x", "service-a", "service-z");
-        assertThat("Services don't match!", actualService.getPrincipal(), is("service-a"));
+    void testWhenAuthorisedService() {
+        assertServiceIsAuthorized(new Service("service-a"), "service-x", "service-a", "service-z");
     }
 
     @Test
-    public void testWhenAuthorisedServiceCaseInsensitive() throws Throwable {
-        Service actualService = authoriseServiceWhenAllowedPrincipals(new Service("service-A"), "service-x", "SERVICE-a", "service-z");
-        assertThat("Services don't match!", actualService.getPrincipal(), is("service-A"));
+    void testWhenAuthorisedServiceCaseInsensitive() {
+        assertServiceIsAuthorized(new Service("service-A"), "service-x", "SERVICE-a", "service-z");
     }
 
-    @Test(expected = UnauthorisedServiceException.class)
-    public void testWhenUnauthorisedService() throws Throwable {
-        Service actualService = authoriseServiceWhenAllowedPrincipals(new Service("service-a"), "service-x", "service-y", "service-z");
-        assertThat("Services don't match!", actualService.getPrincipal(), is("service-a"));
+    @Test
+    void testWhenUnauthorisedService() {
+        assertThrows(UnauthorisedServiceException.class, () -> {
+            Service actualService = authoriseServiceWhenAllowedPrincipals(new Service("service-a"), "service-x", "service-y", "service-z");
+            assertThat("Services don't match!", actualService.getPrincipal(), is("service-a"));
+        });
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void testWhenNoServicesSpecified() throws Throwable {
-        Service actualService = authoriseServiceWhenAllowedPrincipals(new Service("service-a"));
-        assertThat("Services don't match!", actualService.getPrincipal(), is("service-a"));
+    @Test
+    void testWhenNoServicesSpecified() {
+        assertThrows(IllegalArgumentException.class, () -> {
+            Service actualService = authoriseServiceWhenAllowedPrincipals(new Service("service-a"));
+            assertThat("Services don't match!", actualService.getPrincipal(), is("service-a"));
+        });
     }
 
-    @Test(expected = BearerTokenMissingException.class)
-    public void testWhenNoServiceToken() throws Throwable {
+    @Test
+    void testWhenNoServiceToken() {
         HttpServletRequest mockRequest = mock(HttpServletRequest.class);
         when(mockRequest.getHeader("ServiceAuthorization")).thenReturn(null);
 
         SubjectResolver<Service> mockSubjectResolver = subjectResolver("Bearer aa.bbbb.cccc", new Service("service-a"));
-        ServiceRequestAuthorizer serviceRequestAuthorizer = new ServiceRequestAuthorizer(mockSubjectResolver, (any) -> asList("service-x", "service-a", "service-z"));
+        ServiceRequestAuthorizer serviceRequestAuthorizer = new ServiceRequestAuthorizer(mockSubjectResolver, (any) -> Arrays.asList("service-x", "service-a", "service-z"));
 
-        serviceRequestAuthorizer.authorise(mockRequest);
+        assertThrows(BearerTokenMissingException.class, () -> serviceRequestAuthorizer.authorise(mockRequest));
+    }
+
+    private void assertServiceIsAuthorized(Service service, String... allowedPrincipals) {
+        Service actualService = authoriseServiceWhenAllowedPrincipals(service, allowedPrincipals);
+        assertThat("Services don't match!", actualService.getPrincipal(), is(service.getPrincipal()));
     }
 
     private Service authoriseServiceWhenAllowedPrincipals(Service service, String... allowedPrincipals) {
@@ -58,7 +64,7 @@ public class ServiceRequestAuthorizerTest {
         when(request.getHeader("ServiceAuthorization")).thenReturn(bearerToken);
 
         SubjectResolver<Service> subjectResolver = subjectResolver(bearerToken, service);
-        ServiceRequestAuthorizer serviceRequestAuthorizer = new ServiceRequestAuthorizer(subjectResolver, (any) -> asList(allowedPrincipals));
+        ServiceRequestAuthorizer serviceRequestAuthorizer = new ServiceRequestAuthorizer(subjectResolver, (any) -> Arrays.asList(allowedPrincipals));
 
         return serviceRequestAuthorizer.authorise(request);
     }
