@@ -7,8 +7,12 @@ plugins {
 group = 'uk.gov.hmcts.reform.auth'
 version = '2.1.5'
 
-sourceCompatibility = 17
-targetCompatibility = 17
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
+}
+
 tasks.withType(JavaCompile) {
     options.encoding = 'UTF-8'
 }
