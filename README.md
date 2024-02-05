@@ -1,6 +1,6 @@
 # auth-checker-lib
-[![](https://github.com/hmcts/auth-checker-lib/actions/workflows/ci.yml/badge.svg)](https://github.com/hmcts/auth-checker-lib/actions/workflows/ci.yml/)
 [![](https://jitpack.io/v/hmcts/auth-checker-lib.svg)](https://jitpack.io/#hmcts/auth-checker-lib)
+[![](https://github.com/hmcts/auth-checker-lib/actions/workflows/ci.yml/badge.svg)](https://github.com/hmcts/auth-checker-lib/actions/workflows/ci.yml/)
 
 A library for verifying user/service "Bearer" tokens and enforcing coarse grained authentication/authorization.   
 
