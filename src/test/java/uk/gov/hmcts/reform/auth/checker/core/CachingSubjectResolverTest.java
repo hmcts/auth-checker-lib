@@ -1,14 +1,15 @@
 package uk.gov.hmcts.reform.auth.checker.core;
 
 import com.google.common.base.Ticker;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import static java.util.concurrent.TimeUnit.SECONDS;
-
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
-public class CachingSubjectResolverTest {
+class CachingSubjectResolverTest {
+
 
     private static final Subject SOME_SUBJECT = mock(Subject.class);
     private static final int MAXIMUM_SIZE = 2;
@@ -16,13 +17,13 @@ public class CachingSubjectResolverTest {
     private final SubjectResolver delegate = mock(SubjectResolver.class);
     private final FakeTicker ticker = new FakeTicker();
 
-    @Before
-    public void setUp() throws Exception {
+    @BeforeEach
+    void setUp() {
         when(delegate.getTokenDetails(anyString())).thenReturn(SOME_SUBJECT);
     }
 
     @Test
-    public void shouldNotCallDelegateAgainIfTtlHasNotPassed() {
+    void shouldNotCallDelegateAgainIfTtlHasNotPassed() {
         CachingSubjectResolver<Subject> cachingSubjectResolver = cachingSubjectResolverWithTtl(10);
 
         cachingSubjectResolver.getTokenDetails("token");
@@ -33,7 +34,7 @@ public class CachingSubjectResolverTest {
     }
 
     @Test
-    public void shouldCallDelegateAgainIfTtlHasNotPassed() {
+    void shouldCallDelegateAgainIfTtlHasNotPassed() {
         CachingSubjectResolver<Subject> cachingSubjectResolver = cachingSubjectResolverWithTtl(10);
 
         cachingSubjectResolver.getTokenDetails("token");
@@ -46,7 +47,7 @@ public class CachingSubjectResolverTest {
     }
 
     @Test
-    public void maximumCacheSizeEnforcementShouldWork() {
+    void maximumCacheSizeEnforcementShouldWork() {
         CachingSubjectResolver<Subject> cachingSubjectResolver = cachingSubjectResolverWithTtl(10);
 
         cachingSubjectResolver.getTokenDetails("tokenA");   // A in
@@ -65,7 +66,7 @@ public class CachingSubjectResolverTest {
     }
 
     @Test
-    public void settingTtlToZeroShouldDisableCaching() {
+    void settingTtlToZeroShouldDisableCaching() {
         CachingSubjectResolver<Subject> cachingSubjectResolver = cachingSubjectResolverWithTtl(0);
 
         cachingSubjectResolver.getTokenDetails("token");
@@ -75,12 +76,12 @@ public class CachingSubjectResolverTest {
         verify(delegate, times(2)).getTokenDetails("token");
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void shouldNotWrapExceptionIfOneOccurs() {
+    @Test
+    void shouldNotWrapExceptionIfOneOccurs() {
         CachingSubjectResolver<Subject> cachingSubjectResolver = cachingSubjectResolverWithTtl(0);
         when(delegate.getTokenDetails(anyString())).thenThrow(new IllegalArgumentException());
 
-        cachingSubjectResolver.getTokenDetails("token");
+        assertThrows(IllegalArgumentException.class, () -> cachingSubjectResolver.getTokenDetails("token"));
     }
 
     private CachingSubjectResolver<Subject> cachingSubjectResolverWithTtl(int ttlInSeconds) {

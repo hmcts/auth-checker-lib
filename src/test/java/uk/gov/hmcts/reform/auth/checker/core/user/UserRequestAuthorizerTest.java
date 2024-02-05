@@ -4,7 +4,8 @@ import java.util.ArrayList;
 import java.util.Optional;
 import java.util.function.Function;
 import javax.servlet.http.HttpServletRequest;
-import org.junit.Test;
+
+import org.junit.jupiter.api.Test;
 import uk.gov.hmcts.reform.auth.checker.core.Subject;
 import uk.gov.hmcts.reform.auth.checker.core.SubjectResolver;
 import uk.gov.hmcts.reform.auth.checker.core.exceptions.BearerTokenMissingException;
@@ -14,19 +15,20 @@ import uk.gov.hmcts.reform.auth.checker.core.exceptions.UnauthorisedUserExceptio
 import static java.util.Arrays.asList;
 
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.instanceOf;
-import static org.junit.Assert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.mockito.internal.util.collections.Sets.newSet;
 
-public class UserRequestAuthorizerTest {
+class UserRequestAuthorizerTest {
 
     private final String userId = "1111-2222";
     private final Function<HttpServletRequest, Optional<String>> extractUserIdFromRequest = (String) -> Optional.of(userId);
 
     @Test
-    public void testWhenAuthorisedRoleAndValidUserId() {
+    void testWhenAuthorisedRoleAndValidUserId() {
 
         HttpServletRequest mockRequest = mock(HttpServletRequest.class);
         String userBearerToken = "Bearer aa.bbbb.cccc";
@@ -46,7 +48,7 @@ public class UserRequestAuthorizerTest {
     }
 
     @Test
-    public void testWhenAuthorisedRoleAndNoUserIdInRequest() throws Throwable {
+    void testWhenAuthorisedRoleAndNoUserIdInRequest() {
 
         Function<HttpServletRequest, Optional<String>> noUserIdInRequest = (String) -> Optional.empty();
 
@@ -68,7 +70,7 @@ public class UserRequestAuthorizerTest {
     }
 
     @Test
-    public void testWhenNoGlobalRoles() throws Throwable {
+    void testWhenNoGlobalRoles() {
 
         HttpServletRequest mockRequest = mock(HttpServletRequest.class);
         String userBearerToken = "Bearer aa.bbbb.cccc";
@@ -87,8 +89,8 @@ public class UserRequestAuthorizerTest {
         assertThat("Subjects don't match!", actualSubject, is(stubbedSubject));
     }
 
-    @Test(expected = UnauthorisedRoleException.class)
-    public void testWhenRoleNotAuthorised() throws Throwable {
+    @Test
+    void testWhenRoleNotAuthorised() {
 
         HttpServletRequest mockRequest = mock(HttpServletRequest.class);
         String userBearerToken = "Bearer aa.bbbb.cccc";
@@ -101,11 +103,11 @@ public class UserRequestAuthorizerTest {
 
         UserRequestAuthorizer userRequestAuthorizer = new UserRequestAuthorizer(mockSubjectResolver, null, (any) -> asList("role-a", "role-b", "role-c"));
 
-        userRequestAuthorizer.authorise(mockRequest);
+        assertThrows(UnauthorisedRoleException.class, () -> userRequestAuthorizer.authorise(mockRequest));
     }
 
-    @Test(expected = UnauthorisedUserException.class)
-    public void testWhenAuthorisedRoleAndInValidUserId() throws Throwable {
+    @Test
+    void testWhenAuthorisedRoleAndInValidUserId() {
 
         HttpServletRequest mockRequest = mock(HttpServletRequest.class);
         String userBearerToken = "Bearer aa.bbbb.cccc";
@@ -118,11 +120,11 @@ public class UserRequestAuthorizerTest {
 
         UserRequestAuthorizer userRequestAuthorizer = new UserRequestAuthorizer(mockSubjectResolver, extractUserIdFromRequest, (any) -> asList("role-a", "role-b", "role-c"));
 
-        userRequestAuthorizer.authorise(mockRequest);
+        assertThrows(UnauthorisedUserException.class, () -> userRequestAuthorizer.authorise(mockRequest));
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void testWhenInvalidBearerToken() throws Throwable {
+    @Test
+    void testWhenInvalidBearerToken() {
 
         HttpServletRequest mockRequest = mock(HttpServletRequest.class);
         String userBearerToken = "Bearer aa.bbbb.cccc";
@@ -133,11 +135,11 @@ public class UserRequestAuthorizerTest {
 
         UserRequestAuthorizer userRequestAuthorizer = new UserRequestAuthorizer(mockSubjectResolver, extractUserIdFromRequest, (any) -> asList("role-a", "role-b", "role-c"));
 
-        userRequestAuthorizer.authorise(mockRequest);
+        assertThrows(IllegalArgumentException.class, () -> userRequestAuthorizer.authorise(mockRequest));
     }
 
-    @Test(expected = BearerTokenMissingException.class)
-    public void testWhenMissingBearerToken() throws Throwable {
+    @Test
+    void testWhenMissingBearerToken() {
         HttpServletRequest mockRequest = mock(HttpServletRequest.class);
         when(mockRequest.getHeader("Authorization")).thenReturn(null);
 
@@ -145,11 +147,11 @@ public class UserRequestAuthorizerTest {
 
         UserRequestAuthorizer userRequestAuthorizer = new UserRequestAuthorizer(mockSubjectResolver, extractUserIdFromRequest, (any) -> asList("role-a", "role-b", "role-c"));
 
-        userRequestAuthorizer.authorise(mockRequest);
+        assertThrows(BearerTokenMissingException.class, () -> userRequestAuthorizer.authorise(mockRequest));
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void testWhenNullGetUserIdFunction() throws Throwable {
+    @Test
+    void testWhenNullGetUserIdFunction() {
 
         HttpServletRequest mockRequest = mock(HttpServletRequest.class);
         String userBearerToken = "Bearer aa.bbbb.cccc";
@@ -160,11 +162,11 @@ public class UserRequestAuthorizerTest {
 
         UserRequestAuthorizer userRequestAuthorizer = new UserRequestAuthorizer(mockSubjectResolver, null, (any) -> asList("role-a", "role-b", "role-c"));
 
-        userRequestAuthorizer.authorise(mockRequest);
+        assertThrows(IllegalArgumentException.class, () -> userRequestAuthorizer.authorise(mockRequest));
     }
 
-    @Test(expected = AuthenticationProviderUnavailableException.class)
-    public void testWhenAuthenticationProviderNotAvailable() throws Throwable {
+    @Test
+    void testWhenAuthenticationProviderNotAvailable() {
 
         HttpServletRequest mockRequest = mock(HttpServletRequest.class);
         String userBearerToken = "Bearer aa.bbbb.cccc";
@@ -175,6 +177,6 @@ public class UserRequestAuthorizerTest {
 
         UserRequestAuthorizer userRequestAuthorizer = new UserRequestAuthorizer(mockSubjectResolver, extractUserIdFromRequest, (any) -> asList("role-a", "role-b", "role-c"));
 
-        userRequestAuthorizer.authorise(mockRequest);
+        assertThrows(AuthenticationProviderUnavailableException.class, () -> userRequestAuthorizer.authorise(mockRequest));
     }
 }
