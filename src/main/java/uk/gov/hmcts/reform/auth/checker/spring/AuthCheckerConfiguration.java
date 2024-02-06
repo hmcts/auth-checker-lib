@@ -5,10 +5,9 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Optional;
 import java.util.function.Function;
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -28,7 +27,6 @@ import uk.gov.hmcts.reform.auth.parser.idam.core.service.token.ServiceTokenParse
 
 @Lazy
 @Configuration
-
 public class AuthCheckerConfiguration {
 
     @Bean
