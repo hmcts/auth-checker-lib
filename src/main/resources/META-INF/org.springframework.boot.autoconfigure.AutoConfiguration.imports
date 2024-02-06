@@ -1,0 +1,4 @@
+uk.gov.hmcts.reform.auth.checker.spring.AuthCheckerConfiguration
+uk.gov.hmcts.reform.auth.checker.spring.AuthCheckerProperties
+uk.gov.hmcts.reform.auth.parser.idam.spring.service.token.ServiceTokenParserConfiguration
+uk.gov.hmcts.reform.auth.parser.idam.spring.user.token.UserTokenParserConfiguration
