@@ -44,7 +44,8 @@ public class AuthCheckerConfiguration {
 
     @Bean
     @ConditionalOnMissingBean(name = "serviceRequestAuthorizer")
-    public ServiceRequestAuthorizer serviceRequestAuthorizer(SubjectResolver<Service> serviceResolver, Function<HttpServletRequest, Collection<String>> authorizedServicesExtractor) {
+    public ServiceRequestAuthorizer serviceRequestAuthorizer(SubjectResolver<Service> serviceResolver,
+                                                             @Qualifier("authorizedServiceExtractor") Function<HttpServletRequest, Collection<String>> authorizedServicesExtractor) {
         return new ServiceRequestAuthorizer(serviceResolver, authorizedServicesExtractor);
     }
 
