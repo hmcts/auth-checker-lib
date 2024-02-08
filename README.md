@@ -39,6 +39,7 @@ A library for verifying user/service "Bearer" tokens and enforcing coarse graine
    ```java
    
    @Bean
+   @Qualifier("authorizedRolesExtractor")
    public Function<HttpServletRequest, Collection<String>> authorizedRolesExtractor() {
        return (anyRequest) -> Collections.singletonList("citizen");
    }
@@ -84,6 +85,7 @@ A library for verifying user/service "Bearer" tokens and enforcing coarse graine
    ```java
    
    @Bean
+   @Qualifier("authorizedServiceExtractor")
    public Function<HttpServletRequest, Collection<String>> authorizedServicesExtractor() {
        return (request) -> Collections.singletonList("divorce");
    }
