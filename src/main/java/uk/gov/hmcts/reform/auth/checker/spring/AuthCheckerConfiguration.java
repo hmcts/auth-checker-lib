@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.Optional;
 import java.util.function.Function;
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -51,7 +52,7 @@ public class AuthCheckerConfiguration {
     @ConditionalOnMissingBean(name = "userRequestAuthorizer")
     public UserRequestAuthorizer userRequestAuthorizer(SubjectResolver<User> userResolver,
                                                        Function<HttpServletRequest, Optional<String>> userIdExtractor,
-                                                       Function<HttpServletRequest, Collection<String>> authorizedRolesExtractor) {
+                                                       @Qualifier("authorizedRolesExtractor") Function<HttpServletRequest, Collection<String>> authorizedRolesExtractor) {
         return new UserRequestAuthorizer(userResolver, userIdExtractor, authorizedRolesExtractor);
     }
 

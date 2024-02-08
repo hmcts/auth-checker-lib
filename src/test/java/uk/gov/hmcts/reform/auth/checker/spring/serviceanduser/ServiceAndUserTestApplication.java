@@ -6,6 +6,7 @@ import java.util.Optional;
 import java.util.function.Function;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
@@ -48,6 +49,7 @@ public class ServiceAndUserTestApplication {
         }
 
         @Bean
+        @Qualifier("authorizedRolesExtractor")
         public Function<HttpServletRequest, Collection<String>> authorizedRolesExtractor() {
             return (any) -> Collections.singletonList("citizen");
         }
