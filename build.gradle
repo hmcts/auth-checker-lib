@@ -4,8 +4,10 @@ plugins {
     id "io.freefair.lombok" version "8.4"
 }
 
+def buildNumber = System.getenv("RELEASE_VERSION")?.replace("refs/tags/", "") ?: "DEV-SNAPSHOT"
+
 group = 'uk.gov.hmcts.reform.auth'
-version = '2.3.0'
+version = buildNumber
 
 java {
     toolchain {
@@ -17,12 +19,10 @@ tasks.withType(JavaCompile) {
     options.encoding = 'UTF-8'
 }
 
-
 repositories {
     mavenLocal()
     mavenCentral()
 }
-
 
 dependencies {
     api group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.16.1'
@@ -40,7 +40,6 @@ dependencies {
     testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: '2.7.18'
     compileOnly group: 'javax.servlet', name: 'javax.servlet-api', version: '4.0.1'
     compileOnly group: 'com.google.code.findbugs', name: 'annotations', version: '3.0.1'
-
 }
 
 test {
