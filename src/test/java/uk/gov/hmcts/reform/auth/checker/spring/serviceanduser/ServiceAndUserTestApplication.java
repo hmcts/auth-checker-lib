@@ -4,7 +4,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Optional;
 import java.util.function.Function;
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -13,8 +13,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import uk.gov.hmcts.reform.auth.checker.core.RequestAuthorizer;
@@ -79,16 +79,19 @@ public class ServiceAndUserTestApplication {
 
     @Configuration
     @EnableWebSecurity
-    public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
+    public class SecurityConfiguration {
 
         @Autowired
         private AuthCheckerServiceAndUserFilter filter;
 
-        @Override
-        protected void configure(HttpSecurity http) throws Exception {
+        @Bean
+        public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
             http
                 .addFilter(filter)
-                .authorizeRequests().anyRequest().authenticated();
+                .authorizeHttpRequests((authorizeHttpRequests) ->
+                    authorizeHttpRequests.anyRequest().authenticated()
+                );
+            return http.build();
         }
     }
 }
