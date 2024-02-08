@@ -5,7 +5,7 @@ plugins {
 }
 
 group = 'uk.gov.hmcts.reform.auth'
-version = '2.3.0'
+version = '2.4.0'
 
 java {
     toolchain {
