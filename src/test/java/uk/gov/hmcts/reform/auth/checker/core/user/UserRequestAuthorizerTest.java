@@ -3,7 +3,7 @@ package uk.gov.hmcts.reform.auth.checker.core.user;
 import java.util.ArrayList;
 import java.util.Optional;
 import java.util.function.Function;
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 import org.junit.jupiter.api.Test;
 import uk.gov.hmcts.reform.auth.checker.core.Subject;
