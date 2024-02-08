@@ -18,16 +18,19 @@ A library for verifying user/service "Bearer" tokens and enforcing coarse graine
    ```java
    @Configuration
    @EnableWebSecurity
-   public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
+   public class SecurityConfiguration  {
    
        @Autowired
        private AuthCheckerUserOnlyFilter filter;
    
-       @Override
-       protected void configure(HttpSecurity http) throws Exception {
+       @Bean
+       public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
            http
                .addFilter(filter)
-               .authorizeRequests().anyRequest().authenticated();
+               .authorizeHttpRequests((authorizeHttpRequests) ->
+                    authorizeHttpRequests.anyRequest().authenticated()
+                );
+            return http.build();
        }
    }
    ```
@@ -60,16 +63,19 @@ A library for verifying user/service "Bearer" tokens and enforcing coarse graine
    ```java
    @Configuration
    @EnableWebSecurity
-   public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
+   public class SecurityConfiguration {
     
        @Autowired
        private AuthCheckerServiceOnlyFilter filter;
     
-       @Override
-       protected void configure(HttpSecurity http) throws Exception {
+       @Bean
+       public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
            http
                .addFilter(filter)
-               .authorizeRequests().anyRequest().authenticated();
+               .authorizeHttpRequests((authorizeHttpRequests) ->
+                    authorizeHttpRequests.anyRequest().authenticated()
+                );
+            return http.build();
        }
    }
    ```
