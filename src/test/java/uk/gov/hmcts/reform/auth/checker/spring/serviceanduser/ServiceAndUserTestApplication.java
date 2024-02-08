@@ -55,6 +55,7 @@ public class ServiceAndUserTestApplication {
         }
 
         @Bean
+        @Qualifier("authorizedServiceExtractor")
         public Function<HttpServletRequest, Collection<String>> authorizedServicesExtractor() {
             return (any) -> Collections.singletonList("divorce");
         }

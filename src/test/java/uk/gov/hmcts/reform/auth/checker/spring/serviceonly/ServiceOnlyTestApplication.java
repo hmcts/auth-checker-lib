@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.function.Function;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
@@ -40,6 +41,7 @@ public class ServiceOnlyTestApplication {
     @EnableWebSecurity
     public class AuthCheckerConfiguration {
         @Bean
+        @Qualifier("authorizedServiceExtractor")
         public Function<HttpServletRequest, Collection<String>> authorizedServicesExtractor() {
             return (any) -> Collections.singletonList("divorce");
         }
