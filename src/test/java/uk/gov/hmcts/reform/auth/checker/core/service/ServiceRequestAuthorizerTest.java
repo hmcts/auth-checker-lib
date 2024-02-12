@@ -5,7 +5,7 @@ import uk.gov.hmcts.reform.auth.checker.core.SubjectResolver;
 import uk.gov.hmcts.reform.auth.checker.core.exceptions.BearerTokenMissingException;
 import uk.gov.hmcts.reform.auth.checker.core.exceptions.UnauthorisedServiceException;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import java.util.Arrays;
 
 import static org.hamcrest.MatcherAssert.assertThat;

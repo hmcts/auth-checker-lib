@@ -5,10 +5,10 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Optional;
 import java.util.function.Function;
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -28,7 +28,6 @@ import uk.gov.hmcts.reform.auth.parser.idam.core.service.token.ServiceTokenParse
 
 @Lazy
 @Configuration
-
 public class AuthCheckerConfiguration {
 
     @Bean
@@ -45,7 +44,8 @@ public class AuthCheckerConfiguration {
 
     @Bean
     @ConditionalOnMissingBean(name = "serviceRequestAuthorizer")
-    public ServiceRequestAuthorizer serviceRequestAuthorizer(SubjectResolver<Service> serviceResolver, Function<HttpServletRequest, Collection<String>> authorizedServicesExtractor) {
+    public ServiceRequestAuthorizer serviceRequestAuthorizer(SubjectResolver<Service> serviceResolver,
+                                                             @Qualifier("authorizedServiceExtractor") Function<HttpServletRequest, Collection<String>> authorizedServicesExtractor) {
         return new ServiceRequestAuthorizer(serviceResolver, authorizedServicesExtractor);
     }
 
@@ -53,7 +53,7 @@ public class AuthCheckerConfiguration {
     @ConditionalOnMissingBean(name = "userRequestAuthorizer")
     public UserRequestAuthorizer userRequestAuthorizer(SubjectResolver<User> userResolver,
                                                        Function<HttpServletRequest, Optional<String>> userIdExtractor,
-                                                       Function<HttpServletRequest, Collection<String>> authorizedRolesExtractor) {
+                                                       @Qualifier("authorizedRolesExtractor") Function<HttpServletRequest, Collection<String>> authorizedRolesExtractor) {
         return new UserRequestAuthorizer(userResolver, userIdExtractor, authorizedRolesExtractor);
     }
 
