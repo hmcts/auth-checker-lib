@@ -40,7 +40,7 @@ dependencies {
     testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: '3.2.4'
     testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: '3.2.4'
     compileOnly group: 'jakarta.servlet', name: 'jakarta.servlet-api', version: '6.1.0-M2'
-    compileOnly group: 'com.github.spotbugs', name: 'spotbugs-annotations', version: '4.8.3'
+    compileOnly group: 'com.github.spotbugs', name: 'spotbugs-annotations', version: '4.8.4'
 }
 
 test {
