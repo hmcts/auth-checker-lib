@@ -33,7 +33,7 @@ dependencies {
     api group: 'org.springframework.boot', name: 'spring-boot-starter-security', version: '3.3.0'
     api group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: '3.2.6'
     testImplementation group: 'org.wiremock', name: 'wiremock', version: '3.6.0'
-    testImplementation group: 'org.assertj', name: 'assertj-core', version: '3.25.3'
+    testImplementation group: 'org.assertj', name: 'assertj-core', version: '3.26.0'
     testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter', version: '5.10.2'
     testImplementation group: 'org.hamcrest', name: 'hamcrest', version: '2.2'
     testImplementation group: 'org.mockito', name: 'mockito-core', version: '5.12.0'
