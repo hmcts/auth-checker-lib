@@ -38,8 +38,7 @@ A library for verifying user/service "Bearer" tokens and enforcing coarse graine
    this level and more fine-grained using standard spring-security approach (e.g. @Secured annotation at class/method level)
    ```java
    
-   @Bean
-   @Qualifier("authorizedRolesExtractor")
+   @Bean(value = "authorizedRolesExtractor")
    public Function<HttpServletRequest, Collection<String>> authorizedRolesExtractor() {
        return (anyRequest) -> Collections.singletonList("citizen");
    }
@@ -84,8 +83,7 @@ A library for verifying user/service "Bearer" tokens and enforcing coarse graine
    list based on some application property
    ```java
    
-   @Bean
-   @Qualifier("authorizedServiceExtractor")
+   @Bean(value = "authorizedServiceExtractor")
    public Function<HttpServletRequest, Collection<String>> authorizedServicesExtractor() {
        return (request) -> Collections.singletonList("divorce");
    }
