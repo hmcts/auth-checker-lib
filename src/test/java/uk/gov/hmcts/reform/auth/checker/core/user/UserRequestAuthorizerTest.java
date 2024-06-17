@@ -25,7 +25,7 @@ import static org.mockito.internal.util.collections.Sets.newSet;
 class UserRequestAuthorizerTest {
 
     private final String userId = "1111-2222";
-    private final Function<HttpServletRequest, Optional<String>> extractUserIdFromRequest = (String) -> Optional.of(userId);
+    private final Function<HttpServletRequest, Optional<String>> extractUserIdFromRequest = String -> Optional.of(userId);
 
     @Test
     void testWhenAuthorisedRoleAndValidUserId() {
@@ -39,7 +39,7 @@ class UserRequestAuthorizerTest {
         SubjectResolver<User> mockSubjectResolver = mock(SubjectResolver.class);
         when(mockSubjectResolver.getTokenDetails(userBearerToken)).thenReturn(stubbedSubject);
 
-        UserRequestAuthorizer userRequestAuthorizer = new UserRequestAuthorizer(mockSubjectResolver, extractUserIdFromRequest, (any) -> asList("role-a", "role-b", "role-c", "service-a"));
+        UserRequestAuthorizer userRequestAuthorizer = new UserRequestAuthorizer(mockSubjectResolver, extractUserIdFromRequest, any -> asList("role-a", "role-b", "role-c", "service-a"));
 
         Subject actualSubject = userRequestAuthorizer.authorise(mockRequest);
 
@@ -50,7 +50,7 @@ class UserRequestAuthorizerTest {
     @Test
     void testWhenAuthorisedRoleAndNoUserIdInRequest() {
 
-        Function<HttpServletRequest, Optional<String>> noUserIdInRequest = (String) -> Optional.empty();
+        Function<HttpServletRequest, Optional<String>> noUserIdInRequest = String -> Optional.empty();
 
         HttpServletRequest mockRequest = mock(HttpServletRequest.class);
         String userBearerToken = "Bearer aa.bbbb.cccc";
@@ -61,11 +61,11 @@ class UserRequestAuthorizerTest {
         SubjectResolver<User> mockSubjectResolver = mock(SubjectResolver.class);
         when(mockSubjectResolver.getTokenDetails(userBearerToken)).thenReturn(stubbedSubject);
 
-        UserRequestAuthorizer userRequestAuthorizer = new UserRequestAuthorizer(mockSubjectResolver, noUserIdInRequest, (any) -> asList("role-a", "role-b", "role-c", "service-a"));
+        UserRequestAuthorizer userRequestAuthorizer = new UserRequestAuthorizer(mockSubjectResolver, noUserIdInRequest, any -> asList("role-a", "role-b", "role-c", "service-a"));
 
         Subject actualSubject = userRequestAuthorizer.authorise(mockRequest);
 
-        assertThat((User) actualSubject, instanceOf(User.class));
+        assertThat(actualSubject, instanceOf(User.class));
         assertThat("Subjects don't match!", actualSubject, is(stubbedSubject));
     }
 
@@ -81,11 +81,11 @@ class UserRequestAuthorizerTest {
         SubjectResolver<User> mockSubjectResolver = mock(SubjectResolver.class);
         when(mockSubjectResolver.getTokenDetails(userBearerToken)).thenReturn(stubbedSubject);
 
-        UserRequestAuthorizer userRequestAuthorizer = new UserRequestAuthorizer(mockSubjectResolver, extractUserIdFromRequest, (any) -> new ArrayList<>());
+        UserRequestAuthorizer userRequestAuthorizer = new UserRequestAuthorizer(mockSubjectResolver, extractUserIdFromRequest, any -> new ArrayList<>());
 
         Subject actualSubject = userRequestAuthorizer.authorise(mockRequest);
 
-        assertThat((User) actualSubject, instanceOf(User.class));
+        assertThat(actualSubject, instanceOf(User.class));
         assertThat("Subjects don't match!", actualSubject, is(stubbedSubject));
     }
 
@@ -101,7 +101,7 @@ class UserRequestAuthorizerTest {
         SubjectResolver mockSubjectResolver = mock(SubjectResolver.class);
         when(mockSubjectResolver.getTokenDetails(userBearerToken)).thenReturn(stubbedSubject);
 
-        UserRequestAuthorizer userRequestAuthorizer = new UserRequestAuthorizer(mockSubjectResolver, null, (any) -> asList("role-a", "role-b", "role-c"));
+        UserRequestAuthorizer userRequestAuthorizer = new UserRequestAuthorizer(mockSubjectResolver, null, any -> asList("role-a", "role-b", "role-c"));
 
         assertThrows(UnauthorisedRoleException.class, () -> userRequestAuthorizer.authorise(mockRequest));
     }
@@ -118,7 +118,7 @@ class UserRequestAuthorizerTest {
         SubjectResolver<User> mockSubjectResolver = mock(SubjectResolver.class);
         when(mockSubjectResolver.getTokenDetails(userBearerToken)).thenReturn(stubbedSubject);
 
-        UserRequestAuthorizer userRequestAuthorizer = new UserRequestAuthorizer(mockSubjectResolver, extractUserIdFromRequest, (any) -> asList("role-a", "role-b", "role-c"));
+        UserRequestAuthorizer userRequestAuthorizer = new UserRequestAuthorizer(mockSubjectResolver, extractUserIdFromRequest, any -> asList("role-a", "role-b", "role-c"));
 
         assertThrows(UnauthorisedUserException.class, () -> userRequestAuthorizer.authorise(mockRequest));
     }
@@ -133,7 +133,7 @@ class UserRequestAuthorizerTest {
         SubjectResolver<User> mockSubjectResolver = mock(SubjectResolver.class);
         when(mockSubjectResolver.getTokenDetails(userBearerToken)).thenThrow(new IllegalArgumentException());
 
-        UserRequestAuthorizer userRequestAuthorizer = new UserRequestAuthorizer(mockSubjectResolver, extractUserIdFromRequest, (any) -> asList("role-a", "role-b", "role-c"));
+        UserRequestAuthorizer userRequestAuthorizer = new UserRequestAuthorizer(mockSubjectResolver, extractUserIdFromRequest, any -> asList("role-a", "role-b", "role-c"));
 
         assertThrows(IllegalArgumentException.class, () -> userRequestAuthorizer.authorise(mockRequest));
     }
@@ -145,7 +145,7 @@ class UserRequestAuthorizerTest {
 
         SubjectResolver<User> mockSubjectResolver = mock(SubjectResolver.class);
 
-        UserRequestAuthorizer userRequestAuthorizer = new UserRequestAuthorizer(mockSubjectResolver, extractUserIdFromRequest, (any) -> asList("role-a", "role-b", "role-c"));
+        UserRequestAuthorizer userRequestAuthorizer = new UserRequestAuthorizer(mockSubjectResolver, extractUserIdFromRequest, any -> asList("role-a", "role-b", "role-c"));
 
         assertThrows(BearerTokenMissingException.class, () -> userRequestAuthorizer.authorise(mockRequest));
     }
@@ -160,7 +160,7 @@ class UserRequestAuthorizerTest {
         SubjectResolver<User> mockSubjectResolver = mock(SubjectResolver.class);
         when(mockSubjectResolver.getTokenDetails(userBearerToken)).thenThrow(new IllegalArgumentException());
 
-        UserRequestAuthorizer userRequestAuthorizer = new UserRequestAuthorizer(mockSubjectResolver, null, (any) -> asList("role-a", "role-b", "role-c"));
+        UserRequestAuthorizer userRequestAuthorizer = new UserRequestAuthorizer(mockSubjectResolver, null, any -> asList("role-a", "role-b", "role-c"));
 
         assertThrows(IllegalArgumentException.class, () -> userRequestAuthorizer.authorise(mockRequest));
     }
@@ -175,7 +175,7 @@ class UserRequestAuthorizerTest {
         SubjectResolver<User> mockSubjectResolver = mock(SubjectResolver.class);
         when(mockSubjectResolver.getTokenDetails(userBearerToken)).thenThrow(new AuthenticationProviderUnavailableException());
 
-        UserRequestAuthorizer userRequestAuthorizer = new UserRequestAuthorizer(mockSubjectResolver, extractUserIdFromRequest, (any) -> asList("role-a", "role-b", "role-c"));
+        UserRequestAuthorizer userRequestAuthorizer = new UserRequestAuthorizer(mockSubjectResolver, extractUserIdFromRequest, any -> asList("role-a", "role-b", "role-c"));
 
         assertThrows(AuthenticationProviderUnavailableException.class, () -> userRequestAuthorizer.authorise(mockRequest));
     }
