@@ -6,7 +6,6 @@ import java.util.Optional;
 import java.util.function.Function;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
@@ -43,13 +42,12 @@ public class UserOnlyTestApplication {
     public class AuthCheckerConfiguration {
         @Bean
         public Function<HttpServletRequest, Optional<String>> userIdExtractor() {
-            return (request) -> Optional.of("1");
+            return request -> Optional.of("1");
         }
 
-        @Bean
-        @Qualifier("authorizedRolesExtractor")
+        @Bean("authorizedRolesExtractor")
         public Function<HttpServletRequest, Collection<String>> authorizedRolesExtractor() {
-            return (any) -> Collections.singletonList("citizen");
+            return any -> Collections.singletonList("citizen");
         }
 
         @Bean
@@ -77,7 +75,7 @@ public class UserOnlyTestApplication {
         public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
             http
                 .addFilter(filter)
-                .authorizeHttpRequests((authorizeHttpRequests) ->
+                .authorizeHttpRequests(authorizeHttpRequests ->
                     authorizeHttpRequests.anyRequest().authenticated()
                 );
             return http.build();
