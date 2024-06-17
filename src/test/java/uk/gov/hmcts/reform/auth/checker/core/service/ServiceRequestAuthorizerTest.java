@@ -47,7 +47,7 @@ class ServiceRequestAuthorizerTest {
         when(mockRequest.getHeader("ServiceAuthorization")).thenReturn(null);
 
         SubjectResolver<Service> mockSubjectResolver = subjectResolver("Bearer aa.bbbb.cccc", new Service("service-a"));
-        ServiceRequestAuthorizer serviceRequestAuthorizer = new ServiceRequestAuthorizer(mockSubjectResolver, (any) -> Arrays.asList("service-x", "service-a", "service-z"));
+        ServiceRequestAuthorizer serviceRequestAuthorizer = new ServiceRequestAuthorizer(mockSubjectResolver, any -> Arrays.asList("service-x", "service-a", "service-z"));
 
         assertThrows(BearerTokenMissingException.class, () -> serviceRequestAuthorizer.authorise(mockRequest));
     }
@@ -64,7 +64,7 @@ class ServiceRequestAuthorizerTest {
         when(request.getHeader("ServiceAuthorization")).thenReturn(bearerToken);
 
         SubjectResolver<Service> subjectResolver = subjectResolver(bearerToken, service);
-        ServiceRequestAuthorizer serviceRequestAuthorizer = new ServiceRequestAuthorizer(subjectResolver, (any) -> Arrays.asList(allowedPrincipals));
+        ServiceRequestAuthorizer serviceRequestAuthorizer = new ServiceRequestAuthorizer(subjectResolver, any -> Arrays.asList(allowedPrincipals));
 
         return serviceRequestAuthorizer.authorise(request);
     }
