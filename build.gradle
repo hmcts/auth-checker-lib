@@ -32,7 +32,7 @@ dependencies {
     api group: 'org.springframework.boot', name: 'spring-boot-autoconfigure', version: '3.3.1'
     api group: 'org.springframework.boot', name: 'spring-boot-starter-security', version: '3.3.1'
     api group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: '3.3.1'
-    testImplementation group: 'org.wiremock', name: 'wiremock', version: '3.7.0'
+    testImplementation group: 'org.wiremock', name: 'wiremock', version: '3.8.0'
     testImplementation group: 'org.assertj', name: 'assertj-core', version: '3.26.0'
     testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter', version: '5.10.3'
     testImplementation group: 'org.hamcrest', name: 'hamcrest', version: '2.2'
