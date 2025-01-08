@@ -36,7 +36,7 @@ dependencies {
     testImplementation group: 'org.assertj', name: 'assertj-core', version: '3.27.0'
     testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter', version: '5.11.4'
     testImplementation group: 'org.hamcrest', name: 'hamcrest', version: '3.0'
-    testImplementation group: 'org.mockito', name: 'mockito-core', version: '5.14.2'
+    testImplementation group: 'org.mockito', name: 'mockito-core', version: '5.15.2'
     testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: '3.4.1'
     testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: '3.4.1'
     compileOnly group: 'jakarta.servlet', name: 'jakarta.servlet-api', version: '6.1.0'
