@@ -15,6 +15,10 @@ java {
     }
 }
 
+compileJava {
+    options.compilerArgs << '-parameters'
+}
+
 tasks.withType(JavaCompile) {
     options.encoding = 'UTF-8'
 }
