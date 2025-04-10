@@ -1,6 +1,6 @@
 package uk.gov.hmcts.reform.auth.parser.idam.core.service.token;
 
-import edu.umd.cs.findbugs.annotations.SuppressWarnings;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import java.io.IOException;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
 import org.apache.hc.core5.http.HttpResponse;
@@ -18,7 +18,7 @@ public class HttpComponentsBasedServiceTokenParser implements ServiceTokenParser
         this.baseUrl = baseUrl;
     }
 
-    @SuppressWarnings(value = "HTTP_PARAMETER_POLLUTION", justification = "baseUrl + /details is not based on user input")
+    @SuppressFBWarnings(value = "HTTP_PARAMETER_POLLUTION", justification = "baseUrl + /details is not based on user input")
     public String parse(String jwt) {
         try {
             String bearerJwt = jwt.startsWith("Bearer ") ? jwt : "Bearer " + jwt;

@@ -1,7 +1,7 @@
 package uk.gov.hmcts.reform.auth.parser.idam.core.user.token;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import edu.umd.cs.findbugs.annotations.SuppressWarnings;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import org.apache.hc.client5.http.ClientProtocolException;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
 import org.apache.hc.core5.http.HttpResponse;
@@ -24,7 +24,7 @@ public class HttpComponentsBasedUserTokenParser<T> implements UserTokenParser<T>
     }
 
     @Override
-    @SuppressWarnings(value = "HTTP_PARAMETER_POLLUTION", justification = "baseUrl + /details is not based on user input")
+    @SuppressFBWarnings(value = "HTTP_PARAMETER_POLLUTION", justification = "baseUrl + /details is not based on user input")
     public T parse(String jwt) {
         try {
             String bearerJwt = jwt.startsWith("Bearer ") ? jwt : "Bearer " + jwt;
