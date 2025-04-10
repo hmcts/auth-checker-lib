@@ -1,7 +1,7 @@
 plugins {
     id 'java-library'
     id 'maven-publish'
-    id "io.freefair.lombok" version "8.13.1"
+    id 'io.freefair.lombok' version '8.13.1'
 }
 
 def buildNumber = System.getenv("RELEASE_VERSION")?.replace("refs/tags/", "") ?: "DEV-SNAPSHOT"
@@ -19,7 +19,7 @@ compileJava {
     options.compilerArgs << '-parameters'
 }
 
-tasks.withType(JavaCompile) {
+tasks.withType(JavaCompile).configureEach {
     options.encoding = 'UTF-8'
 }
 
@@ -29,21 +29,15 @@ repositories {
 }
 
 dependencies {
-    api group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.18.3'
     api group: 'org.apache.httpcomponents.client5', name: 'httpclient5', version: '5.4.3'
     api group: 'io.jsonwebtoken', name: 'jjwt-api', version: '0.12.6'
     api group: 'com.google.guava', name: 'guava', version: '33.4.6-jre'
-    api group: 'org.springframework.boot', name: 'spring-boot-autoconfigure', version: '3.4.4'
     api group: 'org.springframework.boot', name: 'spring-boot-starter-security', version: '3.4.4'
     api group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: '3.4.4'
-    testImplementation group: 'org.wiremock', name: 'wiremock', version: '3.12.1'
-    testImplementation group: 'org.assertj', name: 'assertj-core', version: '3.27.3'
-    testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter', version: '5.12.1'
-    testImplementation group: 'org.hamcrest', name: 'hamcrest', version: '3.0'
-    testImplementation group: 'org.mockito', name: 'mockito-core', version: '5.17.0'
-    testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: '3.4.4'
+
     testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: '3.4.4'
-    compileOnly group: 'jakarta.servlet', name: 'jakarta.servlet-api', version: '6.1.0'
+    testImplementation group: 'org.wiremock', name: 'wiremock', version: '3.12.1'
+
     compileOnly group: 'com.github.spotbugs', name: 'spotbugs-annotations', version: '4.9.3'
 }
 
@@ -57,7 +51,7 @@ jar {
     }
 }
 
-task printVersion {
+tasks.register('printVersion') {
     doLast {
         print project.version
     }
@@ -77,12 +71,14 @@ def pomConfig = {
     }
 }
 
-task sourcesJar(type: Jar, dependsOn: classes) {
+tasks.register('sourcesJar', Jar) {
+    dependsOn classes
     archiveClassifier = 'sources'
     from sourceSets.main.allSource
 }
 
-task javadocJar(type: Jar, dependsOn: javadoc) {
+tasks.register('javadocJar', Jar) {
+    dependsOn javadoc
     archiveClassifier = 'javadoc'
     from javadoc.destinationDir
 }
@@ -98,9 +94,9 @@ publishing {
             from components.java
             artifact sourcesJar
             artifact javadocJar
-            groupId project.group
-            artifactId 'auth-checker-lib'
-            version project.version
+            groupId = project.group
+            artifactId = 'auth-checker-lib'
+            version = project.version
 
             pom.withXml {
                 def root = asNode()
@@ -112,4 +108,3 @@ publishing {
         }
     }
 }
-
