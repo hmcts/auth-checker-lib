@@ -1,6 +1,19 @@
 # auth-checker-lib
-[![](https://jitpack.io/v/hmcts/auth-checker-lib.svg)](https://jitpack.io/#hmcts/auth-checker-lib)
-[![](https://github.com/hmcts/auth-checker-lib/actions/workflows/ci.yml/badge.svg)](https://github.com/hmcts/auth-checker-lib/actions/workflows/ci.yml/)
+
+This library is hosted on Azure DevOps Artifacts and can be used in your project by adding the following to your `build.gradle` file:
+
+```gradle
+repositories {
+    maven {
+        url 'https://pkgs.dev.azure.com/hmcts/Artifacts/_packaging/hmcts-lib/maven/v1'
+    }
+}
+
+dependencies {
+  implementation 'com.github.hmcts:auth-checker-lib:LATEST_TAG'
+}
+```
+
 
 A library for verifying user/service "Bearer" tokens and enforcing coarse grained authentication/authorization.   
 
