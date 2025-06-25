@@ -4,7 +4,7 @@ plugins {
     id "io.freefair.lombok" version "6.2.0"
 }
 
-group = 'uk.gov.hmcts.reform.auth'
+group = 'com.github.hmcts'
 version = '2.1.5'
 
 sourceCompatibility = 11
@@ -102,5 +102,14 @@ publishing {
             }
         }
     }
+    repositories {
+        maven {
+            name = "AzureArtifacts"
+            url = uri("https://pkgs.dev.azure.com/hmcts/Artifacts/_packaging/hmcts-lib/maven/v1")
+            credentials {
+                username = System.getenv("AZURE_DEVOPS_ARTIFACT_USERNAME")
+                password = System.getenv("AZURE_DEVOPS_ARTIFACT_TOKEN")
+            }
+        }
+    }
 }
-
