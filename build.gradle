@@ -38,7 +38,7 @@ dependencies {
     testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: '3.5.5'
     testImplementation group: 'org.wiremock', name: 'wiremock', version: '3.13.1'
 
-    compileOnly group: 'com.github.spotbugs', name: 'spotbugs-annotations', version: '4.9.6'
+    compileOnly group: 'com.github.spotbugs', name: 'spotbugs-annotations', version: '4.9.8'
 }
 
 test {
