@@ -32,10 +32,10 @@ dependencies {
     api group: 'org.apache.httpcomponents.client5', name: 'httpclient5', version: '5.5'
     api group: 'io.jsonwebtoken', name: 'jjwt-api', version: '0.13.0'
     api group: 'com.google.guava', name: 'guava', version: '33.4.8-jre'
-    api group: 'org.springframework.boot', name: 'spring-boot-starter-security', version: '3.5.5'
-    api group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: '3.5.5'
+    api group: 'org.springframework.boot', name: 'spring-boot-starter-security', version: '3.5.7'
+    api group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: '3.5.7'
 
-    testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: '3.5.5'
+    testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: '3.5.7'
     testImplementation group: 'org.wiremock', name: 'wiremock', version: '3.13.1'
 
     compileOnly group: 'com.github.spotbugs', name: 'spotbugs-annotations', version: '4.9.6'
