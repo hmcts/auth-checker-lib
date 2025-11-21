@@ -1,10 +1,11 @@
 plugins {
     id 'java-library'
     id 'maven-publish'
-    id 'io.freefair.lombok' version '8.14.3'
+    id 'io.freefair.lombok' version '9.1.0'
+    id 'io.spring.dependency-management' version '1.1.7'
 }
 
-def buildNumber = System.getenv("RELEASE_VERSION")?: "DEV-SNAPSHOT"
+def buildNumber = System.getenv("RELEASE_VERSION") ?: "DEV-SNAPSHOT"
 
 group = 'com.github.hmcts'
 version = buildNumber
@@ -13,10 +14,9 @@ java {
     toolchain {
         languageVersion = JavaLanguageVersion.of(17)
     }
-}
 
-compileJava {
-    options.compilerArgs << '-parameters'
+    withSourcesJar()
+    withJavadocJar()
 }
 
 tasks.withType(JavaCompile).configureEach {
@@ -28,17 +28,24 @@ repositories {
     mavenCentral()
 }
 
+dependencyManagement {
+    imports {
+        mavenBom "org.springframework.boot:spring-boot-dependencies:3.5.7"
+    }
+}
+
 dependencies {
-    api group: 'org.apache.httpcomponents.client5', name: 'httpclient5', version: '5.5'
-    api group: 'io.jsonwebtoken', name: 'jjwt-api', version: '0.13.0'
-    api group: 'com.google.guava', name: 'guava', version: '33.4.8-jre'
-    api group: 'org.springframework.boot', name: 'spring-boot-starter-security', version: '4.0.0'
-    api group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: '4.0.0'
+    api 'org.springframework.boot:spring-boot-starter-security'
+    api 'org.springframework.boot:spring-boot-starter-web'
+    api 'org.apache.httpcomponents.client5:httpclient5:5.5.1'
+    api 'io.jsonwebtoken:jjwt-api:0.13.0'
+    api 'com.google.guava:guava:33.5.0-jre'
 
-    testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: '4.0.0'
-    testImplementation group: 'org.wiremock', name: 'wiremock', version: '3.13.2'
+    compileOnly 'com.github.spotbugs:spotbugs-annotations:4.9.8'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 
-    compileOnly group: 'com.github.spotbugs', name: 'spotbugs-annotations', version: '4.9.6'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.wiremock:wiremock-standalone:3.13.2'
 }
 
 test {
@@ -47,7 +54,10 @@ test {
 
 jar {
     manifest {
-        attributes 'Implementation-Title': project.name, 'Implementation-Version': project.version
+        attributes(
+                'Implementation-Title': project.name,
+                'Implementation-Version': project.version
+        )
     }
 }
 
@@ -71,29 +81,11 @@ def pomConfig = {
     }
 }
 
-tasks.register('sourcesJar', Jar) {
-    dependsOn classes
-    archiveClassifier = 'sources'
-    from sourceSets.main.allSource
-}
-
-tasks.register('javadocJar', Jar) {
-    dependsOn javadoc
-    archiveClassifier = 'javadoc'
-    from javadoc.destinationDir
-}
-
-artifacts {
-    archives sourcesJar
-    archives javadocJar
-}
-
 publishing {
     publications {
         Main(MavenPublication) {
             from components.java
-            artifact sourcesJar
-            artifact javadocJar
+
             groupId = project.group
             artifactId = 'auth-checker-lib'
             version = project.version
