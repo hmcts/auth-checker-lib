@@ -14,10 +14,9 @@ java {
     toolchain {
         languageVersion = JavaLanguageVersion.of(17)
     }
-}
 
-compileJava {
-    options.compilerArgs << '-parameters'
+    withSourcesJar()
+    withJavadocJar()
 }
 
 tasks.withType(JavaCompile).configureEach {
@@ -31,7 +30,7 @@ repositories {
 
 dependencyManagement {
     imports {
-        mavenBom "org.springframework.boot:spring-boot-dependencies:3.5.0"
+        mavenBom "org.springframework.boot:spring-boot-dependencies:3.5.7"
     }
 }
 
@@ -41,11 +40,12 @@ dependencies {
     api 'org.apache.httpcomponents.client5:httpclient5:5.5.1'
     api 'io.jsonwebtoken:jjwt-api:0.13.0'
     api 'com.google.guava:guava:33.5.0-jre'
-    testImplementation 'org.wiremock:wiremock-standalone:3.13.2'
+
     compileOnly 'com.github.spotbugs:spotbugs-annotations:4.9.8'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
-    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+    testImplementation 'org.wiremock:wiremock-standalone:3.13.2'
 }
 
 test {
@@ -81,29 +81,11 @@ def pomConfig = {
     }
 }
 
-tasks.register('sourcesJar', Jar) {
-    dependsOn classes
-    archiveClassifier = 'sources'
-    from sourceSets.main.allSource
-}
-
-tasks.register('javadocJar', Jar) {
-    dependsOn javadoc
-    archiveClassifier = 'javadoc'
-    from javadoc.destinationDir
-}
-
-artifacts {
-    archives sourcesJar
-    archives javadocJar
-}
-
 publishing {
     publications {
         Main(MavenPublication) {
             from components.java
-            artifact sourcesJar
-            artifact javadocJar
+
             groupId = project.group
             artifactId = 'auth-checker-lib'
             version = project.version
