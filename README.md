@@ -1,5 +1,16 @@
 # auth-checker-lib
 
+[![Java CI](https://github.com/hmcts/auth-checker-lib/workflows/Java%20CI/badge.svg)](
+https://github.com/hmcts/auth-checker-lib/actions/workflows/ci.yml
+)
+[![GitHub tag (latest SemVer)](https://img.shields.io/github/v/release/hmcts/auth-checker-lib)](
+https://github.com/hmcts/auth-checker-lib/releases
+)
+
+A library for verifying user/service "Bearer" tokens and enforcing coarse grained authentication/authorization.
+
+## Usage
+
 This library is hosted on Azure DevOps Artifacts and can be used in your project by adding the following to your `build.gradle` file:
 
 ```gradle
@@ -14,8 +25,6 @@ dependencies {
 }
 ```
 
-
-A library for verifying user/service "Bearer" tokens and enforcing coarse grained authentication/authorization.   
 
 ## Securing a spring-boot application
 
