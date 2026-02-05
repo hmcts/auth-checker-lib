@@ -1,71 +1,85 @@
 package uk.gov.hmcts.reform.auth.checker.spring.useronly;
 
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.internal.util.collections.Sets;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.ResponseEntity;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.boot.webtestclient.autoconfigure.AutoConfigureWebTestClient;
+import org.springframework.test.web.reactive.server.WebTestClient;
 import uk.gov.hmcts.reform.auth.checker.core.user.User;
 import uk.gov.hmcts.reform.auth.checker.spring.backdoors.UserResolverBackdoor;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
-import static org.springframework.http.HttpMethod.GET;
-import static org.springframework.http.HttpStatus.FORBIDDEN;
-import static org.springframework.http.HttpStatus.OK;
+import java.util.Set;
+
 import static uk.gov.hmcts.reform.auth.checker.core.user.UserRequestAuthorizer.AUTHORISATION;
 
-@ExtendWith(SpringExtension.class)
-@SpringBootTest(webEnvironment = RANDOM_PORT)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@AutoConfigureWebTestClient
 class UserOnlyComponentTest {
+
     @Autowired
-    private TestRestTemplate restTemplate;
+    private WebTestClient webTestClient;
 
     @Autowired
     private UserResolverBackdoor userResolverBackdoor;
 
     @Test
     void noAuthorizationHeaderShouldResultIn403() {
-        ResponseEntity<String> response = restTemplate.getForEntity("/test", String.class);
-        assertThat(response.getStatusCode()).isEqualTo(FORBIDDEN);
+        webTestClient.get()
+            .uri("/test")
+            .exchange()
+            .expectStatus().isForbidden();
     }
 
     @Test
     void unknownTokenShouldResultIn401() {
-        ResponseEntity<String> response = restTemplate.exchange("/test", GET, withUserHeader("unknownToken"), String.class);
-        assertThat(response.getStatusCode()).isEqualTo(FORBIDDEN);
+        webTestClient.get()
+            .uri("/test")
+            .header(AUTHORISATION, "unknownToken")
+            .exchange()
+            .expectStatus().isForbidden();
     }
 
     @Test
     void unmatchedRoleShouldResultIn401() {
-        userResolverBackdoor.registerToken("token", new User("1", Sets.newSet("unmatched")));
-        ResponseEntity<String> response = restTemplate.exchange("/test", GET, withUserHeader("token"), String.class);
-        assertThat(response.getStatusCode()).isEqualTo(FORBIDDEN);
+        userResolverBackdoor.registerToken(
+            "token",
+            new User("1", Set.of("unmatched"))
+        );
+
+        webTestClient.get()
+            .uri("/test")
+            .header(AUTHORISATION, "token")
+            .exchange()
+            .expectStatus().isForbidden();
     }
 
     @Test
     void unmatchedUserIdShouldResultIn401() {
-        userResolverBackdoor.registerToken("token", new User("2", Sets.newSet("citizen")));
-        ResponseEntity<String> response = restTemplate.exchange("/test", GET, withUserHeader("token"), String.class);
-        assertThat(response.getStatusCode()).isEqualTo(FORBIDDEN);
+        userResolverBackdoor.registerToken(
+            "token",
+            new User("2", Set.of("citizen"))
+        );
+
+        webTestClient.get()
+            .uri("/test")
+            .header(AUTHORISATION, "token")
+            .exchange()
+            .expectStatus().isForbidden();
     }
 
     @Test
     void happyPathResultsIn200() {
-        userResolverBackdoor.registerToken("token", new User("1", Sets.newSet("citizen")));
-        ResponseEntity<String> response = restTemplate.exchange("/test", GET, withUserHeader("token"), String.class);
-        assertThat(response.getStatusCode()).isEqualTo(OK);
-        assertThat(response.getBody()).isEqualTo("1");
-    }
+        userResolverBackdoor.registerToken(
+            "token",
+            new User("1", Set.of("citizen"))
+        );
 
-    private HttpEntity<Object> withUserHeader(String token) {
-        HttpHeaders headers = new HttpHeaders();
-        headers.add(AUTHORISATION, token);
-        return new HttpEntity<>(headers);
+        webTestClient.get()
+            .uri("/test")
+            .header(AUTHORISATION, "token")
+            .exchange()
+            .expectStatus().isOk()
+            .expectBody(String.class)
+            .isEqualTo("1");
     }
 }
