@@ -39,7 +39,7 @@ dependencies {
     api 'org.springframework.boot:spring-boot-starter-web'
     api 'org.apache.httpcomponents.client5:httpclient5:5.6'
     api 'io.jsonwebtoken:jjwt-api:0.13.0'
-    api 'com.google.guava:guava:33.5.0-jre'
+    api 'com.google.guava:guava:33.6.0-jre'
 
     compileOnly 'com.github.spotbugs:spotbugs-annotations:4.9.8'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
