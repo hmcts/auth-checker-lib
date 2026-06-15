@@ -41,7 +41,7 @@ dependencies {
     api 'io.jsonwebtoken:jjwt-api:0.13.0'
     api 'com.google.guava:guava:33.6.0-jre'
 
-    compileOnly 'com.github.spotbugs:spotbugs-annotations:4.10.1'
+    compileOnly 'com.github.spotbugs:spotbugs-annotations:4.10.2'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
