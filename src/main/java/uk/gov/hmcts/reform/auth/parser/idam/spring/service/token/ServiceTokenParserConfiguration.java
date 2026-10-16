@@ -2,6 +2,7 @@ package uk.gov.hmcts.reform.auth.parser.idam.spring.service.token;
 
 import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
 import org.apache.hc.client5.http.impl.classic.HttpClients;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -20,7 +21,7 @@ public class ServiceTokenParserConfiguration {
 
     @Bean
     public ServiceTokenParser serviceAuthProviderAuthCheckClient(
-        CloseableHttpClient serviceTokenParserHttpClient,
+        @Qualifier("serviceTokenParserHttpClient") CloseableHttpClient serviceTokenParserHttpClient,
         @Value("${auth.provider.service.client.baseUrl}") String baseUrl) {
             return new HttpComponentsBasedServiceTokenParser(serviceTokenParserHttpClient, baseUrl);
     }
